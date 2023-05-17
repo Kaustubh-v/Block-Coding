@@ -14,8 +14,7 @@ export class Printstmt {
   }
 
   create() {
-    //    this.count += 1;
-    //    console.log("print no here :" + this.count);
+
     console.log("print block created");
     var newBlock = document.createElement("div");
     newBlock.classList.add("Block");
@@ -66,8 +65,7 @@ export class Variable {
   }
 
   create() {
-    //    this.count += 1;
-    //    console.log("print no here :" + this.count);
+
     console.log("var block created");
     var newBlock = document.createElement("div");
     newBlock.classList.add("Block");
@@ -91,16 +89,66 @@ export class Variable {
     return newBlock;
   }
 
-//   display(txtboxid) {
-//     console.log("text id = " + txtboxid)
-//     const txtbox = document.getElementById(txtboxid);
-//     const txt = document.createTextNode(txtbox.value + "\n");
+}
 
-//     // console.log("print = "+ txt);
-//     var terminal = document.getElementById("Terminal");
-//     terminal.appendChild(txt);
-//     terminal.innerHTML = terminal.innerHTML.replace('\n', '<br>');
-//   }
+export class Assignment {
+  static instanceCount = 0;
+  constructor() {
+    Assignment.instanceCount++;
+    this.name = "Assignblock" + Assignment.instanceCount;
+    console.log("name = " + this.name);
+    console.log("assignment block initated");
+  }
+
+  getname() {
+    console.log(Assignment.name);
+    return Assignment.name;
+  }
+
+  create() {
+
+    console.log("assignment block created");
+    var newBlock = document.createElement("div");
+    newBlock.classList.add("Block");
+    newBlock.id = "Assignmentblock" + Assignment.instanceCount;
+    newBlock.setAttribute("draggable", "true");
+    newBlock.style.backgroundColor = "blue";
+
+    var header = document.createElement("div");
+    header.id = "Blockheader" + Assignment.instanceCount;
+    header.textContent = "ASSIGN";
+    newBlock.appendChild(header);
+
+    var rowContainer = document.createElement('div');
+    rowContainer.style.display = 'inline-block';
+
+    var input_LHS = document.createElement("input");
+    input_LHS.setAttribute("type", "text");
+    input_LHS.classList.add("Text-Box");
+    input_LHS.id = "txt-box-LHS" + this.name;
+    console.log("input id = " + "txt-box-LHS" + this.name);
+    input_LHS.setAttribute("placeholder", "Enter LHS");
+    //    newBlock.appendChild(input_LHS);
+
+
+    var input_RHS = document.createElement("input");
+    input_RHS.setAttribute("type", "text");
+    input_RHS.classList.add("Text-Box");
+    input_RHS.id = "txt-box-LHS" + this.name;
+    console.log("input id = " + "txt-box-RHS" + this.name);
+    input_RHS.setAttribute("placeholder", "Enter RHS");
+    //    newBlock.appendChild(input_RHS);
+
+
+    rowContainer.appendChild(input_LHS);
+    // Create the '=' symbol
+    const equalsSymbol = document.createTextNode(' = ');
+    rowContainer.appendChild(equalsSymbol);
+    rowContainer.appendChild(input_RHS);
+    newBlock.appendChild(rowContainer);
+    newBlock.addEventListener('dragstart', drag);
+    return newBlock;
+  }
 }
 
 //export const prln = new Printstmt();
