@@ -3,7 +3,14 @@ export class Printstmt {
   static instanceCount = 0;
   constructor() {
     Printstmt.instanceCount++;
+    this.name = "Printblock" + Printstmt.instanceCount;
+    console.log("name = "+ this.name);
     console.log("print block initated");
+  }
+
+  getname(){
+    console.log(Printstmt.name);
+    return Printstmt.name;
   }
 
   create() {
@@ -23,20 +30,24 @@ export class Printstmt {
    
     var input = document.createElement("input");
     input.setAttribute("type", "text");
-    input.id =  "print-txt-box";
+    input.classList.add("Text-Box");
+    input.id =  "txt-box" + this.name;
+    console.log("input id = " + "txt-box" + this.name );
     input.setAttribute("placeholder", "Enter text here");
     newBlock.appendChild(input);
     newBlock.addEventListener('dragstart' , drag);
     return newBlock;
   }
 
-  display() {
-    console.log("print block no: " + this.count);
-    const txtbox = document.getElementById("print-txt-box");
-    const txt = txtbox.value;
+  display(txtboxid) {
+    console.log("text id = "+ txtboxid)
+    const txtbox = document.getElementById(txtboxid);
+    const txt = document.createTextNode( txtbox.value + "\n");
 
+    // console.log("print = "+ txt);
     var terminal = document.getElementById("Terminal");
-    terminal.textContent = txt;
+   terminal.appendChild(txt );
+   terminal.innerHTML = terminal.innerHTML.replace('\n', '<br>');
   }
 }
 
