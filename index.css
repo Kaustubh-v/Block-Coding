@@ -1,0 +1,49 @@
+.column {
+    float: left;
+    width: 32.5%;
+    border: solid;
+    border-width: 1px;
+    margin : 3px;
+    height: 500px;
+  }
+  
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+#canvas{
+    background-color: cadetblue;
+    height: 500px;
+}
+
+.Block{
+    background-color: red;
+    padding : 5px;
+    display:block;
+    align-items:center;
+    width: 70px;
+}
+
+#Blockheader{
+    margin : 5px;
+}
+
+#print-txt-box{
+    width : 50px;
+}
+
+.RunButton{
+
+    margin : 5px;
+}
+
+.languageButtons{
+    color: blanchedalmond;
+    padding: 5px;
+}
+
+#Terminal{
+    width: 90%;
+    height: auto;
+}
