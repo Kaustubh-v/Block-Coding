@@ -1,4 +1,4 @@
-import { Printstmt, Variable, Assignment } from "./language.js";
+import { Printstmt, Variable, Assignment, valid_variable_name} from "./language.js";
 const myButton = document.getElementById("run");
 myButton.addEventListener("click", function () { Runprog() });
 
@@ -102,6 +102,7 @@ function getElementsinOrder() {
 function Runprog() {
   const terminal = document.getElementById("Terminal");
   terminal.textContent = '';
+  variables_list = {}
 
   const orderofplacement = getElementsinOrder();
   const orderofexec = reorder(orderofelmnts, orderofplacement);
@@ -113,7 +114,7 @@ function Runprog() {
     }
 
     else if (ele instanceof Variable) {
-      if(ele.valid_variable_name("txt-box" + ele.name)){
+      if(valid_variable_name("txt-box" + ele.name)){
         const var_txtbox = document.getElementById("txt-box" + ele.name);
         variables_list[var_txtbox.value] = 0;
       }

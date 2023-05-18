@@ -101,21 +101,6 @@ export class Variable {
     newBlock.addEventListener('dragstart', drag);
     return newBlock;
   }
-
-  valid_variable_name(txtboxid) {
-    var txtbox = document.getElementById(txtboxid);
-    const var_name = txtbox.value;
-    const variableNameRegex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
-
-    if (variableNameRegex.test(var_name)) {
-      console.log("The input is a valid variable name in C.");
-      return true;
-    } else {
-      console.log("The input is not a valid variable name in C.");
-      return false;
-    }
-
-  }
 }
 
 export class Assignment {
@@ -178,6 +163,9 @@ export class Assignment {
     const RHS_txt = document.getElementById(txtboxid_RHS);
     console.log("LHS = " + LHS_txt.value);
     console.log("RHS = " + RHS_txt.value);
+    if(!valid_string(txtboxid_RHS)){
+      return;
+    }
 
     var flag = false;
     for (const key in variables_list) {
@@ -196,5 +184,32 @@ export class Assignment {
   }
 }
 
-//export const prln = new Printstmt();
+export function valid_variable_name(txtboxid) {
+  var txtbox = document.getElementById(txtboxid);
+  const var_name = txtbox.value;
+  const variableNameRegex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
+
+  if (variableNameRegex.test(var_name)) {
+    console.log("The input is a valid variable name in C.");
+    return true;
+  } else {
+    console.log("The input is not a valid variable name in C.");
+    return false;
+  }
+}
+
+export function valid_string(txtboxid) {
+  var txtbox = document.getElementById(txtboxid);
+  const input_txt = txtbox.value;
+  const stringPattern = /^"([^"\\]|\\.)*"$/;
+
+  if (stringPattern.test(input_txt)) {
+    console.log("The input is a valid string.");
+    return true;
+  } else {
+    console.log("The input is not a valid string.");
+    return false;
+  }
+}
+
 
