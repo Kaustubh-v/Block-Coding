@@ -39,10 +39,22 @@ export class Printstmt {
     return newBlock;
   }
 
-  display(txtboxid) {
+
+  display(txtboxid , variables_list) {
     console.log("text id = " + txtboxid)
     const txtbox = document.getElementById(txtboxid);
-    const txt = document.createTextNode(txtbox.value + "\n");
+    const parent = txtbox.parentNode;
+    const childrenblocks = parent.children;
+    var variableValue = "";
+    for(let i = 0; i < childrenblocks.length ; i++){
+      var childid = childrenblocks[i].id;
+      console.log("child id is " + childid);
+      if(childid.includes("Var")){
+        variableValue  = document.getElementById("txt-box" + childid).value    
+      }
+        }
+       
+    const txt = document.createTextNode(txtbox.value + variableValue + "\n");
 
     // console.log("print = "+ txt);
     var terminal = document.getElementById("Terminal");

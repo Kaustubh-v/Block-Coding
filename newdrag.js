@@ -8,8 +8,30 @@ function allowDrop(ev) {
   }
   
   function drop(ev) {
-    var data = ev.dataTransfer.getData("text");
-    var parent = document.getElementById("Canvas");
-    parent.appendChild(document.getElementById(data));
     ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    var draggedelement = document.getElementById(data);
+    var parent = document.getElementById("Canvas");
+    var droppedonelementid = ev.target.id;
+    var droppedonelement = document.getElementById(droppedonelementid);
+    console.log("dropeed on element = "+ droppedonelementid);
+    droppedparent = droppedonelement.parentNode;
+    // hasclassblock = droppedonelement.classList.contains("Block");
+    // console.log("has class = " + hasclassblockheader);
+    if(data && droppedonelementid.includes("Block")){
+      parent.removeChild(draggedelement);
+      try {parent.insertBefore(draggedelement, droppedparent);}
+      catch(error){
+        parent.insertBefore(draggedelement, droppedonelement);
+      }
+    }
+    else if(data && droppedonelementid.includes("block")){
+      droppedonelement.insertAdjacentElement('beforeend' , draggedelement);
+    }
+    else if(droppedonelementid == "Delete"){
+      draggedelement.remove();
+    }
+    else{
+    parent.appendChild(draggedelement);
   }
+}

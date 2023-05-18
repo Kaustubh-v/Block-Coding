@@ -109,7 +109,7 @@ function Runprog() {
     const ele = orderofexec[i];
     console.log("running = " + ele.name);
     if (ele instanceof Printstmt) {
-      ele.display("txt-box" + ele.name);
+      ele.display("txt-box" + ele.name , variables_list);
     }
 
     else if (ele instanceof Variable) {
