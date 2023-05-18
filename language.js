@@ -40,20 +40,30 @@ export class Printstmt {
   }
 
 
-  display(txtboxid , variables_list) {
+  display(txtboxid, variables_list) {
     console.log("text id = " + txtboxid)
     const txtbox = document.getElementById(txtboxid);
     const parent = txtbox.parentNode;
     const childrenblocks = parent.children;
+    var variableName = "";
     var variableValue = "";
-    for(let i = 0; i < childrenblocks.length ; i++){
+    for (let i = 0; i < childrenblocks.length; i++) {
       var childid = childrenblocks[i].id;
       console.log("child id is " + childid);
-      if(childid.includes("Var")){
-        variableValue  = document.getElementById("txt-box" + childid).value    
-      }
+      if (childid.includes("Var")) {
+        variableName = document.getElementById("txt-box" + childid).value
+
+        var flag = false;
+        for (const key in variables_list) {
+          if (`${key}` == variableName) {
+            variableValue = variables_list[key];
+            flag = true;
+          }
         }
-       
+
+      }
+    }
+
     const txt = document.createTextNode(txtbox.value + variableValue + "\n");
 
     // console.log("print = "+ txt);
@@ -163,7 +173,7 @@ export class Assignment {
     const RHS_txt = document.getElementById(txtboxid_RHS);
     console.log("LHS = " + LHS_txt.value);
     console.log("RHS = " + RHS_txt.value);
-    if(!valid_string(txtboxid_RHS)){
+    if (!valid_string(txtboxid_RHS) && !valid_number(txtboxid_RHS)) {
       return;
     }
 
@@ -208,6 +218,22 @@ export function valid_string(txtboxid) {
     return true;
   } else {
     console.log("The input is not a valid string.");
+    return false;
+  }
+}
+
+export function valid_number(txtboxid) {
+  
+  var txtbox = document.getElementById(txtboxid);
+  const input_txt = txtbox.value;
+  const numberPattern = /^-?\d+(\.\d+)?$/;
+
+
+  if (numberPattern.test(input_txt)) {
+    console.log("The input is a valid number.");
+    return true;
+  } else {
+    console.log("The input is not a valid number.");
     return false;
   }
 }
