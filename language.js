@@ -1,3 +1,4 @@
+import { variables_list } from "./index.js"
 
 export class Printstmt {
   static instanceCount = 0;
@@ -89,6 +90,20 @@ export class Variable {
     return newBlock;
   }
 
+  valid_variable_name(txtboxid) {
+    var txtbox = document.getElementById(txtboxid);
+    const var_name = txtbox.value;
+    const variableNameRegex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
+
+    if (variableNameRegex.test(var_name)) {
+      console.log("The input is a valid variable name in C.");
+      return true;
+    } else {
+      console.log("The input is not a valid variable name in C.");
+      return false;
+    }
+
+  }
 }
 
 export class Assignment {
@@ -128,17 +143,13 @@ export class Assignment {
     input_LHS.id = "txt-box-LHS" + this.name;
     console.log("input id = " + "txt-box-LHS" + this.name);
     input_LHS.setAttribute("placeholder", "Enter LHS");
-    //    newBlock.appendChild(input_LHS);
-
 
     var input_RHS = document.createElement("input");
     input_RHS.setAttribute("type", "text");
     input_RHS.classList.add("Text-Box");
-    input_RHS.id = "txt-box-LHS" + this.name;
+    input_RHS.id = "txt-box-RHS" + this.name;
     console.log("input id = " + "txt-box-RHS" + this.name);
     input_RHS.setAttribute("placeholder", "Enter RHS");
-    //    newBlock.appendChild(input_RHS);
-
 
     rowContainer.appendChild(input_LHS);
     // Create the '=' symbol
@@ -148,6 +159,28 @@ export class Assignment {
     newBlock.appendChild(rowContainer);
     newBlock.addEventListener('dragstart', drag);
     return newBlock;
+  }
+
+  assign(txtboxid_LHS, txtboxid_RHS) {
+    const LHS_txt = document.getElementById(txtboxid_LHS);
+    const RHS_txt = document.getElementById(txtboxid_RHS);
+    console.log("LHS = " + LHS_txt.value);
+    console.log("RHS = " + RHS_txt.value);
+
+    var flag = false;
+    for (const key in variables_list) {
+      if (`${key}` == LHS_txt.value) {
+        variables_list[key] = RHS_txt.value;
+        console.log("value is assigned");
+        flag = true;
+        return;
+      }
+    }
+
+    console.log("invalid variable name");
+    return;
+
+
   }
 }
 

@@ -1,4 +1,4 @@
-import { Printstmt, Variable, Assignment} from "./language.js";
+import { Printstmt, Variable, Assignment } from "./language.js";
 const myButton = document.getElementById("run");
 myButton.addEventListener("click", function () { Runprog() });
 
@@ -12,7 +12,7 @@ const myButton3 = document.getElementById("assign");
 myButton3.addEventListener("click", function () { CreateBlock("assignblock") });
 
 var orderofelmnts = [];
-let variables_list = new Object();
+export let variables_list = new Object();
 
 // const canvas = document.getElementById("Canvas");
 // canvas.addEventListener("mousedown" , function(event){
@@ -69,13 +69,15 @@ function CreateBlock(block_type) {
 
   }
 
-  else if (block_type == "assignblock"){
+  else if (block_type == "assignblock") {
     var assblck = new Assignment();
-    var newblck = assblck.create();
+    var newblock = assblck.create();
     var parent = document.getElementById("Menu");
-    parent.appendChild(newblck);
+    parent.appendChild(newblock);
     orderofelmnts.push(assblck);
   }
+  // var parent = document.getElementById("Menu");
+  // parent.appendChild(newblock);
 }
 
 
@@ -106,12 +108,21 @@ function Runprog() {
   for (let i = 0; i < orderofexec.length; i++) {
     const ele = orderofexec[i];
     console.log("running = " + ele.name);
-    if(ele instanceof Printstmt){
+    if (ele instanceof Printstmt) {
       ele.display("txt-box" + ele.name);
     }
 
-    else if(ele instanceof Variable){
-      variables_list[ele.name] = 0;
+    else if (ele instanceof Variable) {
+      if(ele.valid_variable_name("txt-box" + ele.name)){
+        const var_txtbox = document.getElementById("txt-box" + ele.name);
+        variables_list[var_txtbox.value] = 0;
+      }
+ 
+    }
+
+    else if(ele instanceof Assignment){
+      ele.assign("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
+
     }
 
   }
@@ -120,7 +131,7 @@ function Runprog() {
   for (const key in variables_list) {
     console.log(`Key: ${key}, Value: ${variables_list[key]}`);
   }
-  
+
   // prln.display();
 }
 
