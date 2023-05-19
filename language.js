@@ -90,13 +90,6 @@ export class Printstmt extends BaseBlock {
         if (varchildid.includes("txt")) {
           variableName = document.getElementById(varchildid).value
           break;
-          // var flag = false;
-          // for (const key in variables_list) {
-          //   if (`${key}` == variableName) {
-          //     variableValue = variables_list[key];
-          //     flag = true;
-          //   }
-          // }
 
         }
         break;
@@ -105,8 +98,13 @@ export class Printstmt extends BaseBlock {
 
     variableValue = variables_list[variableName];
     console.log("value of variable is : " + variableName);
-
-    const txt = document.createTextNode(txtbox.value + variableValue + "\n");
+    var txt = "";
+    if (!variableValue) {
+      txt = document.createTextNode(txtbox.value + "\n");
+    }
+    else {
+      txt = document.createTextNode(txtbox.value + variableValue + "\n");
+    }
 
     // console.log("print = "+ txt);
     var terminal = document.getElementById("Terminal");
@@ -324,6 +322,19 @@ export class Comparison extends BinaryOp {
     var newBlock = super.create();
     return newBlock;
   }
+
+  compare(txtboxid_LHS, txtboxid_RHS) {
+    const dropdown = document.getElementById("dropdown" + this.name);
+    const selectedOption = dropdown.options[dropdown.selectedIndex];
+    const selectedValue = selectedOption.value;
+    const selectedText = selectedOption.text;
+  
+    console.log("Selected value: " + selectedValue);
+    console.log("Selected text: " + selectedText);
+  
+    // Rest of the compare method implementation
+  }
+  
 }
 export function valid_variable_name(txtboxid) {
   var txtbox = document.getElementById(txtboxid);

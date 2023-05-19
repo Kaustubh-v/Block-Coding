@@ -148,6 +148,11 @@ function Runprog() {
 
     }
 
+    else if(ele instanceof Comparison){
+      ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
+
+    }
+
   }
 
   console.log("printing variable list for verification");
