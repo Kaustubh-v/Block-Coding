@@ -82,27 +82,27 @@ export class Printstmt extends BaseBlock {
     for (let i = 0; i < childrenblocks.length; i++) {
       var childid = childrenblocks[i].id;
       console.log("child id is " + childid);
-      if(blocknamepattern.test(childid)){
+      if (blocknamepattern.test(childid)) {
         const blockchild = document.getElementById(childid)
         var varchild = blockchild.children;
-          for(let j = 0 ; j < varchild.length ; j++)
-            var varchildid = varchild[j].id; 
-              if(varchildid.includes("txt")) {
-                variableName = document.getElementById(varchildid).value
-                break;
-        // var flag = false;
-        // for (const key in variables_list) {
-        //   if (`${key}` == variableName) {
-        //     variableValue = variables_list[key];
-        //     flag = true;
-        //   }
-        // }
-            
+        for (let j = 0; j < varchild.length; j++)
+          var varchildid = varchild[j].id;
+        if (varchildid.includes("txt")) {
+          variableName = document.getElementById(varchildid).value
+          break;
+          // var flag = false;
+          // for (const key in variables_list) {
+          //   if (`${key}` == variableName) {
+          //     variableValue = variables_list[key];
+          //     flag = true;
+          //   }
+          // }
+
+        }
+        break;
       }
-      break;
-    }  
-  }
-  
+    }
+
     variableValue = variables_list[variableName];
     console.log("value of variable is : " + variableName);
 
@@ -147,18 +147,23 @@ export class Variable extends BaseBlock {
   // Rest of the methods specific to Variable class
 }
 
-export class Assignment extends BaseBlock {
+export class BinaryOp extends BaseBlock {
   constructor() {
     super();
-    console.log("assignment block initiated");
+    console.log("binaryOp block initiated");
   }
 
   getBlockColor() {
-    return "blue";
+    return "";
   }
 
   getHeaderText() {
-    return "ASSIGN";
+    return "";
+  }
+
+  getSymbolElement() {
+
+    return null;
   }
 
   create() {
@@ -182,12 +187,36 @@ export class Assignment extends BaseBlock {
     input_RHS.setAttribute("placeholder", "Enter RHS");
 
     rowContainer.appendChild(input_LHS);
-    // Create the '=' symbol
-    const equalsSymbol = document.createTextNode(' = ');
-    rowContainer.appendChild(equalsSymbol);
+    rowContainer.appendChild(this.getSymbolElement());
     rowContainer.appendChild(input_RHS);
     newBlock.appendChild(rowContainer);
 
+    return newBlock;
+  }
+
+}
+
+export class Assignment extends BinaryOp {
+  constructor() {
+    super();
+    console.log("assignment block initiated");
+  }
+
+  getBlockColor() {
+    return "blue";
+  }
+
+  getHeaderText() {
+    return "ASSIGN";
+  }
+
+  getSymbolElement() {
+    const equalsSymbol = document.createTextNode(' = ');
+    return equalsSymbol;
+  }
+
+  create() {
+    var newBlock = super.create();
     return newBlock;
   }
 
@@ -197,28 +226,105 @@ export class Assignment extends BaseBlock {
     const RHS_txt = document.getElementById(txtboxid_RHS);
     console.log("LHS = " + LHS_txt.value);
     console.log("RHS = " + RHS_txt.value);
-    if (!valid_string(txtboxid_RHS) && !valid_number(txtboxid_RHS)) {
+
+    if (!valid_variable_name(txtboxid_LHS)) {
+      console.log("syntax error: cannot assign to non-variable entity");
       return;
     }
 
-    var flag = false;
+    var lflag = false;
     for (const key in variables_list) {
       if (`${key}` == LHS_txt.value) {
-        variables_list[key] = RHS_txt.value;
-        console.log("value is assigned");
-        flag = true;
-        return;
+        lflag = true;
+        break;
       }
     }
+    if (!lflag) {
+      console.log("undefined variable on LHS");
+      return;
+    }
 
-    console.log("invalid variable name");
+    if (valid_string(txtboxid_RHS) || valid_number(txtboxid_RHS)) {
+      variables_list[LHS_txt.value] = RHS_txt.value;
+      console.log("value is assigned");
+      return;
+    }
+
+    else if (valid_variable_name(txtboxid_RHS)) {
+      var rflag = false;
+      for (const key in variables_list) {
+        if (`${key}` == RHS_txt.value) {
+          rflag = true;
+          break;
+        }
+      }
+      if (rflag == false) {
+        console.log("undefined variable on RHS");
+        return;
+      }
+      variables_list[LHS_txt.value] = variables_list[RHS_txt.value]
+      console.log("value is assigned");
+      return;
+    }
     return;
+
+
 
 
   }
 }
 
+export class Comparison extends BinaryOp {
+  constructor() {
+    super();
+    console.log("comparison block initiated");
+  }
 
+  getBlockColor() {
+    return "orange";
+  }
+
+  getHeaderText() {
+    return "compare";
+  }
+
+  getSymbolElement() {
+    const dropdown = document.createElement("select");
+    dropdown.id = "dropdown" + this.name;
+
+    const option1 = document.createElement("option");
+    option1.value = "==";
+    option1.text = "==";
+    dropdown.appendChild(option1);
+
+    const option2 = document.createElement("option");
+    option2.value = "<";
+    option2.text = "<";
+    dropdown.appendChild(option2);
+
+    const option3 = document.createElement("option");
+    option3.value = ">";
+    option3.text = ">";
+    dropdown.appendChild(option3);
+
+    const option4 = document.createElement("option");
+    option4.value = "<=";
+    option4.text = "<=";
+    dropdown.appendChild(option4);
+
+    const option5 = document.createElement("option");
+    option5.value = ">=";
+    option5.text = ">=";
+    dropdown.appendChild(option5);
+
+    return dropdown;
+  }
+
+  create() {
+    var newBlock = super.create();
+    return newBlock;
+  }
+}
 export function valid_variable_name(txtboxid) {
   var txtbox = document.getElementById(txtboxid);
   const var_name = txtbox.value;
@@ -262,5 +368,4 @@ export function valid_number(txtboxid) {
     return false;
   }
 }
-
 

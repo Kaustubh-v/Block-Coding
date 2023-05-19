@@ -1,4 +1,4 @@
-import { Printstmt, Variable, Assignment, valid_variable_name} from "./language.js";
+import { Printstmt, Variable, Assignment, Comparison, valid_variable_name} from "./language.js";
 const myButton = document.getElementById("run");
 myButton.addEventListener("click", function () { Runprog() });
 
@@ -10,6 +10,9 @@ myButton2.addEventListener("click", function () { CreateBlock("varblock") });
 
 const myButton3 = document.getElementById("assign");
 myButton3.addEventListener("click", function () { CreateBlock("assignblock") });
+
+const myButton4 = document.getElementById("compare");
+myButton4.addEventListener("click", function () { CreateBlock("compareblock") });
 
 var orderofelmnts = [];
 export let variables_list = new Object();
@@ -71,6 +74,14 @@ function CreateBlock(block_type) {
 
   else if (block_type == "assignblock") {
     var assblck = new Assignment();
+    var newblock = assblck.create();
+    var parent = document.getElementById("Menu");
+    parent.appendChild(newblock);
+    orderofelmnts.push(assblck);
+  }
+
+  else if (block_type == "compareblock") {
+    var assblck = new Comparison();
     var newblock = assblck.create();
     var parent = document.getElementById("Menu");
     parent.appendChild(newblock);
