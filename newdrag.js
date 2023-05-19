@@ -18,7 +18,7 @@ function allowDrop(ev) {
     droppedparent = droppedonelement.parentNode;
     // hasclassblock = droppedonelement.classList.contains("Block");
     // console.log("has class = " + hasclassblockheader);
-    if(data && droppedonelementid.includes("Block")){
+    if(data && droppedonelementid.includes("Block") || droppedonelementid.includes("text")){
       parent.removeChild(draggedelement);
       try {parent.insertBefore(draggedelement, droppedparent);}
       catch(error){

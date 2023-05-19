@@ -1,32 +1,63 @@
 import { variables_list } from "./index.js"
 
-export class Printstmt {
+export class BaseBlock {
   static instanceCount = 0;
   constructor() {
-    Printstmt.instanceCount++;
-    this.name = "Printblock" + Printstmt.instanceCount;
+    BaseBlock.instanceCount++;
+    this.name = "block" + BaseBlock.instanceCount;
     console.log("name = " + this.name);
-    console.log("print block initated");
+    console.log("block initiated");
   }
 
   getname() {
-    console.log(Printstmt.name);
-    return Printstmt.name;
+    console.log(BaseBlock.name);
+    return BaseBlock.name;
   }
 
   create() {
-
-    console.log("print block created");
+    console.log("block created");
     var newBlock = document.createElement("div");
     newBlock.classList.add("Block");
-    newBlock.id = "Printblock" + Printstmt.instanceCount;
+    newBlock.id = this.name;
     newBlock.setAttribute("draggable", "true");
-    newBlock.style.backgroundColor = "red";
+    newBlock.style.backgroundColor = this.getBlockColor();
 
     var header = document.createElement("div");
-    header.id = "Blockheader" + Printstmt.instanceCount;
-    header.textContent = "PRINT";
+    header.id = "Blockheader" + BaseBlock.instanceCount;
+    header.textContent = this.getHeaderText();
     newBlock.appendChild(header);
+
+    newBlock.addEventListener('dragstart', drag);
+    return newBlock;
+  }
+
+  getBlockColor() {
+    // This method should be overridden in child classes
+    return "";
+  }
+
+  getHeaderText() {
+    // This method should be overridden in child classes
+    return "";
+  }
+}
+
+export class Printstmt extends BaseBlock {
+  constructor() {
+    super();
+    console.log("print block initiated");
+  }
+
+  getBlockColor() {
+    return "red";
+  }
+
+  getHeaderText() {
+    return "PRINT";
+  }
+
+  create() {
+    var newBlock = super.create();
 
     var input = document.createElement("input");
     input.setAttribute("type", "text");
@@ -35,11 +66,11 @@ export class Printstmt {
     console.log("input id = " + "txt-box" + this.name);
     input.setAttribute("placeholder", "Enter text here");
     newBlock.appendChild(input);
-    newBlock.addEventListener('dragstart', drag);
+
     return newBlock;
   }
 
-
+  // Rest of the methods specific to Printstmt class
   display(txtboxid, variables_list) {
     console.log("text id = " + txtboxid)
     const txtbox = document.getElementById(txtboxid);
@@ -47,22 +78,33 @@ export class Printstmt {
     const childrenblocks = parent.children;
     var variableName = "";
     var variableValue = "";
+    const blocknamepattern = /^block\d+$/;
     for (let i = 0; i < childrenblocks.length; i++) {
       var childid = childrenblocks[i].id;
       console.log("child id is " + childid);
-      if (childid.includes("Var")) {
-        variableName = document.getElementById("txt-box" + childid).value
-
-        var flag = false;
-        for (const key in variables_list) {
-          if (`${key}` == variableName) {
-            variableValue = variables_list[key];
-            flag = true;
-          }
-        }
-
+      if(blocknamepattern.test(childid)){
+        const blockchild = document.getElementById(childid)
+        var varchild = blockchild.children;
+          for(let j = 0 ; j < varchild.length ; j++)
+            var varchildid = varchild[j].id; 
+              if(varchildid.includes("txt")) {
+                variableName = document.getElementById(varchildid).value
+                break;
+        // var flag = false;
+        // for (const key in variables_list) {
+        //   if (`${key}` == variableName) {
+        //     variableValue = variables_list[key];
+        //     flag = true;
+        //   }
+        // }
+            
       }
-    }
+      break;
+    }  
+  }
+  
+    variableValue = variables_list[variableName];
+    console.log("value of variable is : " + variableName);
 
     const txt = document.createTextNode(txtbox.value + variableValue + "\n");
 
@@ -71,75 +113,56 @@ export class Printstmt {
     terminal.appendChild(txt);
     terminal.innerHTML = terminal.innerHTML.replace('\n', '<br>');
   }
+
 }
 
-export class Variable {
-  static instanceCount = 0;
+export class Variable extends BaseBlock {
   constructor() {
-    Variable.instanceCount++;
-    this.name = "Varblock" + Variable.instanceCount;
-    console.log("name = " + this.name);
-    console.log("variable block initated");
+    super();
+    console.log("variable block initiated");
   }
 
-  getname() {
-    console.log(Variable.name);
-    return Variable.name;
+  getBlockColor() {
+    return "green";
+  }
+
+  getHeaderText() {
+    return "VAR";
   }
 
   create() {
-
-    console.log("var block created");
-    var newBlock = document.createElement("div");
-    newBlock.classList.add("Block");
-    newBlock.id = "Varblock" + Variable.instanceCount;
-    newBlock.setAttribute("draggable", "true");
-    newBlock.style.backgroundColor = "green";
-
-    var header = document.createElement("div");
-    header.id = "Blockheader" + Variable.instanceCount;
-    header.textContent = "VAR";
-    newBlock.appendChild(header);
+    var newBlock = super.create();
 
     var input = document.createElement("input");
     input.setAttribute("type", "text");
     input.classList.add("Text-Box");
-    input.id = "txt-box" + this.name;
+    input.id = "vartxt-box" + this.name;
     console.log("input id = " + "txt-box" + this.name);
     input.setAttribute("placeholder", "var name here");
     newBlock.appendChild(input);
-    newBlock.addEventListener('dragstart', drag);
+
     return newBlock;
   }
+
+  // Rest of the methods specific to Variable class
 }
 
-export class Assignment {
-  static instanceCount = 0;
+export class Assignment extends BaseBlock {
   constructor() {
-    Assignment.instanceCount++;
-    this.name = "Assignblock" + Assignment.instanceCount;
-    console.log("name = " + this.name);
-    console.log("assignment block initated");
+    super();
+    console.log("assignment block initiated");
   }
 
-  getname() {
-    console.log(Assignment.name);
-    return Assignment.name;
+  getBlockColor() {
+    return "blue";
+  }
+
+  getHeaderText() {
+    return "ASSIGN";
   }
 
   create() {
-
-    console.log("assignment block created");
-    var newBlock = document.createElement("div");
-    newBlock.classList.add("Block");
-    newBlock.id = "Assignmentblock" + Assignment.instanceCount;
-    newBlock.setAttribute("draggable", "true");
-    newBlock.style.backgroundColor = "blue";
-
-    var header = document.createElement("div");
-    header.id = "Blockheader" + Assignment.instanceCount;
-    header.textContent = "ASSIGN";
-    newBlock.appendChild(header);
+    var newBlock = super.create();
 
     var rowContainer = document.createElement('div');
     rowContainer.style.display = 'inline-block';
@@ -164,10 +187,11 @@ export class Assignment {
     rowContainer.appendChild(equalsSymbol);
     rowContainer.appendChild(input_RHS);
     newBlock.appendChild(rowContainer);
-    newBlock.addEventListener('dragstart', drag);
+
     return newBlock;
   }
 
+  // Rest of the methods specific to Assignment class
   assign(txtboxid_LHS, txtboxid_RHS) {
     const LHS_txt = document.getElementById(txtboxid_LHS);
     const RHS_txt = document.getElementById(txtboxid_RHS);
@@ -193,6 +217,7 @@ export class Assignment {
 
   }
 }
+
 
 export function valid_variable_name(txtboxid) {
   var txtbox = document.getElementById(txtboxid);
@@ -223,7 +248,7 @@ export function valid_string(txtboxid) {
 }
 
 export function valid_number(txtboxid) {
-  
+
   var txtbox = document.getElementById(txtboxid);
   const input_txt = txtbox.value;
   const numberPattern = /^-?\d+(\.\d+)?$/;
