@@ -78,22 +78,33 @@ export class Printstmt extends BaseBlock {
     const childrenblocks = parent.children;
     var variableName = "";
     var variableValue = "";
+    const blocknamepattern = /^block\d+$/;
     for (let i = 0; i < childrenblocks.length; i++) {
       var childid = childrenblocks[i].id;
       console.log("child id is " + childid);
-      if (childid.includes("Var")) {
-        variableName = document.getElementById("txt-box" + childid).value
-
-        var flag = false;
-        for (const key in variables_list) {
-          if (`${key}` == variableName) {
-            variableValue = variables_list[key];
-            flag = true;
-          }
-        }
-
+      if(blocknamepattern.test(childid)){
+        const blockchild = document.getElementById(childid)
+        var varchild = blockchild.children;
+          for(let j = 0 ; j < varchild.length ; j++)
+            var varchildid = varchild[j].id; 
+              if(varchildid.includes("txt")) {
+                variableName = document.getElementById(varchildid).value
+                break;
+        // var flag = false;
+        // for (const key in variables_list) {
+        //   if (`${key}` == variableName) {
+        //     variableValue = variables_list[key];
+        //     flag = true;
+        //   }
+        // }
+            
       }
-    }
+      break;
+    }  
+  }
+  
+    variableValue = variables_list[variableName];
+    console.log("value of variable is : " + variableName);
 
     const txt = document.createTextNode(txtbox.value + variableValue + "\n");
 
@@ -125,7 +136,7 @@ export class Variable extends BaseBlock {
     var input = document.createElement("input");
     input.setAttribute("type", "text");
     input.classList.add("Text-Box");
-    input.id = "txt-box" + this.name;
+    input.id = "vartxt-box" + this.name;
     console.log("input id = " + "txt-box" + this.name);
     input.setAttribute("placeholder", "var name here");
     newBlock.appendChild(input);

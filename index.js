@@ -114,8 +114,8 @@ function Runprog() {
     }
 
     else if (ele instanceof Variable) {
-      if(valid_variable_name("txt-box" + ele.name)){
-        const var_txtbox = document.getElementById("txt-box" + ele.name);
+      if(valid_variable_name("vartxt-box" + ele.name)){
+        const var_txtbox = document.getElementById("vartxt-box" + ele.name);
         var unique_flag = true;
         for(const key in variables_list){
           if (`${key}` == var_txtbox.value) {
