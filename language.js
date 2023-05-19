@@ -4,7 +4,7 @@ export class BaseBlock {
   static instanceCount = 0;
   constructor() {
     BaseBlock.instanceCount++;
-    this.name = "Block" + BaseBlock.instanceCount;
+    this.name = "block" + BaseBlock.instanceCount;
     console.log("name = " + this.name);
     console.log("block initiated");
   }
