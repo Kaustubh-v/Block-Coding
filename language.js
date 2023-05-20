@@ -230,14 +230,7 @@ export class Assignment extends BinaryOp {
       return;
     }
 
-    var lflag = false;
-    for (const key in variables_list) {
-      if (`${key}` == LHS_txt.value) {
-        lflag = true;
-        break;
-      }
-    }
-    if (!lflag) {
+    if (!is_declared_variable(txtboxid_LHS)) {
       console.log("undefined variable on LHS");
       return;
     }
@@ -249,20 +242,17 @@ export class Assignment extends BinaryOp {
     }
 
     else if (valid_variable_name(txtboxid_RHS)) {
-      var rflag = false;
-      for (const key in variables_list) {
-        if (`${key}` == RHS_txt.value) {
-          rflag = true;
-          break;
-        }
-      }
-      if (rflag == false) {
+
+      if(! is_declared_variable(txtboxid_RHS)){
         console.log("undefined variable on RHS");
         return;
       }
       variables_list[LHS_txt.value] = variables_list[RHS_txt.value]
       console.log("value is assigned");
       return;
+    }
+    else{
+      console.log("undefined symbol in RHS");
     }
     return;
 
@@ -328,13 +318,24 @@ export class Comparison extends BinaryOp {
     const selectedOption = dropdown.options[dropdown.selectedIndex];
     const selectedValue = selectedOption.value;
     const selectedText = selectedOption.text;
-  
+
     console.log("Selected value: " + selectedValue);
     console.log("Selected text: " + selectedText);
-  
-    // Rest of the compare method implementation
+
+    const LHS_txt = document.getElementById(txtboxid_LHS);
+    const RHS_txt = document.getElementById(txtboxid_RHS);
+    console.log("LHS = " + LHS_txt.value);
+    console.log("RHS = " + RHS_txt.value);
+
+    if(same_dtype(txtboxid_LHS, txtboxid_RHS)){
+      console.log("same d type");
+    }
+    else{
+      console.log("non matching dtype");
+    }
+
   }
-  
+
 }
 export function valid_variable_name(txtboxid) {
   var txtbox = document.getElementById(txtboxid);
@@ -348,6 +349,27 @@ export function valid_variable_name(txtboxid) {
     console.log("The input is not a valid variable name in C.");
     return false;
   }
+}
+
+export function is_declared_variable(txtboxid) {
+  if (!valid_variable_name(txtboxid)) {
+    return false;
+  }
+
+  var txtbox = document.getElementById(txtboxid);
+
+  var flag = false;
+  for (const key in variables_list) {
+    if (`${key}` == txtbox.value) {
+      flag = true;
+      break;
+    }
+  }
+  if (flag == false) {
+    console.log("undefined variable on RHS");
+    return false;
+  }
+  return true;
 }
 
 export function valid_string(txtboxid) {
@@ -376,6 +398,41 @@ export function valid_number(txtboxid) {
     return true;
   } else {
     console.log("The input is not a valid number.");
+    return false;
+  }
+}
+
+export function same_dtype(txtboxid_LHS, txtboxid_RHS){
+  const LHS_txt = document.getElementById(txtboxid_LHS);
+  const RHS_txt = document.getElementById(txtboxid_RHS);
+  if((valid_string(txtboxid_LHS) && valid_string(txtboxid_RHS)) || (valid_number(txtboxid_LHS) && valid_number(txtboxid_RHS))){
+    return true;
+  }
+
+  else if(valid_variable_name(txtboxid_LHS) && valid_variable_name(txtboxid_RHS)){
+    if(is_declared_variable(txtboxid_LHS) && is_declared_variable(txtboxid_RHS)){
+      var LHS_value = variables_list[LHS_txt.value];
+      var RHS_value = variables_list[RHS_txt.value];
+
+      const stringPattern = /^"([^"\\]|\\.)*"$/;
+      const numberPattern = /^-?\d+(\.\d+)?$/;
+      if (stringPattern.test(LHS_value) && stringPattern.test(RHS_value)) {
+        return true;
+      }
+
+      else if (numberPattern.test(LHS_value) && numberPattern.test(RHS_value)) {
+        return true;
+      }
+      else{
+        return false;
+      }
+
+    }
+    else{
+      return false;
+    }
+  }
+  else{
     return false;
   }
 }
