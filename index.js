@@ -1,4 +1,4 @@
-import { Printstmt, Variable, Assignment, Comparison, valid_variable_name} from "./language.js";
+import { Printstmt, Variable, Assignment, valid_variable_name , Addition , Comparison} from "./language.js";
 const myButton = document.getElementById("run");
 myButton.addEventListener("click", function () { Runprog() });
 
@@ -11,9 +11,11 @@ myButton2.addEventListener("click", function () { CreateBlock("varblock") });
 const myButton3 = document.getElementById("assign");
 myButton3.addEventListener("click", function () { CreateBlock("assignblock") });
 
-const myButton4 = document.getElementById("compare");
-myButton4.addEventListener("click", function () { CreateBlock("compareblock") });
+const myButton4 = document.getElementById("addition");
+myButton4.addEventListener("click", function () { CreateBlock("additionblock") });
 
+Button5 = document.getElementById("compare");
+myButton5.addEventListener("click", function () { CreateBlock("compareblock") });
 var orderofelmnts = [];
 export let variables_list = new Object();
 
@@ -79,14 +81,6 @@ function CreateBlock(block_type) {
     parent.appendChild(newblock);
     orderofelmnts.push(assblck);
   }
-
-  else if (block_type == "compareblock") {
-    var assblck = new Comparison();
-    var newblock = assblck.create();
-    var parent = document.getElementById("Menu");
-    parent.appendChild(newblock);
-    orderofelmnts.push(assblck);
-  }
   // var parent = document.getElementById("Menu");
   // parent.appendChild(newblock);
 }
@@ -147,12 +141,14 @@ function Runprog() {
       ele.assign("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
 
     }
-
+    else if(ele instanceof Addition){
+      console.log("----reached here------" + ele.name);
+      ele.doadd("txt-box-LHS" + ele.name , "txt-box-RHS" + ele.name , "txt-box-add" + ele.name);
+    }
     else if(ele instanceof Comparison){
       ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
 
     }
-
   }
 
   console.log("printing variable list for verification");
