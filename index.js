@@ -1,21 +1,40 @@
-import { Printstmt, Variable, Assignment, valid_variable_name , Addition , Comparison} from "./language.js";
+import {
+  Printstmt,
+  Variable,
+  Assignment,
+  valid_variable_name,
+  Addition,
+  Comparison,
+} from "./language.js";
 const myButton = document.getElementById("run");
-myButton.addEventListener("click", function () { Runprog() });
+myButton.addEventListener("click", function () {
+  Runprog();
+});
 
 const myButton1 = document.getElementById("print");
-myButton1.addEventListener("click", function () { CreateBlock("printblock") });
+myButton1.addEventListener("click", function () {
+  CreateBlock("printblock");
+});
 
 const myButton2 = document.getElementById("variable");
-myButton2.addEventListener("click", function () { CreateBlock("varblock") });
+myButton2.addEventListener("click", function () {
+  CreateBlock("varblock");
+});
 
 const myButton3 = document.getElementById("assign");
-myButton3.addEventListener("click", function () { CreateBlock("assignblock") });
+myButton3.addEventListener("click", function () {
+  CreateBlock("assignblock");
+});
 
 const myButton4 = document.getElementById("addition");
-myButton4.addEventListener("click", function () { CreateBlock("additionblock") });
+myButton4.addEventListener("click", function () {
+  CreateBlock("additionblock");
+});
 
-Button5 = document.getElementById("compare");
-myButton5.addEventListener("click", function () { CreateBlock("compareblock") });
+const Button5 = document.getElementById("compare");
+Button5.addEventListener("click", function () {
+  CreateBlock("compareblock");
+});
 var orderofelmnts = [];
 export let variables_list = new Object();
 
@@ -54,7 +73,6 @@ function reorder(elmntarr, orderofexec) {
 }
 
 function CreateBlock(block_type) {
-
   console.log("init" + block_type + " here");
   if (block_type == "printblock") {
     var prnblck = new Printstmt();
@@ -63,31 +81,42 @@ function CreateBlock(block_type) {
     parent.appendChild(newBlock);
     orderofelmnts.push(prnblck);
     // dragElement(newBlock);
-  }
-
-  else if (block_type == "varblock") {
+  } else if (block_type == "varblock") {
     var varblck = new Variable();
     var newBlock = varblck.create();
     var parent = document.getElementById("Menu");
     parent.appendChild(newBlock);
     orderofelmnts.push(varblck);
-
-  }
-
-  else if (block_type == "assignblock") {
+  } else if (block_type == "assignblock") {
     var assblck = new Assignment();
     var newblock = assblck.create();
     var parent = document.getElementById("Menu");
     parent.appendChild(newblock);
     orderofelmnts.push(assblck);
   }
+ else if (block_type == "additionblock") {
+  var addblck = new Addition();
+  var newblock = addblck.create();
+  var parent = document.getElementById("Menu");
+  parent.appendChild(newblock);
+  orderofelmnts.push(addblck);
+}
+  else if (block_type == "compareblock") {
+  var compblck = new Comparison();
+  var newblock = compblck.create();
+  var parent = document.getElementById("Menu");
+  parent.appendChild(newblock);
+  orderofelmnts.push(compblck);
+}
+
+
+
   // var parent = document.getElementById("Menu");
   // parent.appendChild(newblock);
 }
 
-
 function getElementsinOrder() {
-  const parentElement = document.getElementById('Canvas'); // Replace 'parent' with the ID of the parent element
+  const parentElement = document.getElementById("Canvas"); // Replace 'parent' with the ID of the parent element
   var elmntarr = [];
   // Get all the children of the parent element
   const children = parentElement.childNodes;
@@ -106,48 +135,42 @@ function getElementsinOrder() {
 
 function Runprog() {
   const terminal = document.getElementById("Terminal");
-  terminal.textContent = '';
-  variables_list = {}
+  terminal.textContent = "";
+  variables_list = {};
 
   const orderofplacement = getElementsinOrder();
   const orderofexec = reorder(orderofelmnts, orderofplacement);
   for (let i = 0; i < orderofexec.length; i++) {
     const ele = orderofexec[i];
     console.log("running = " + ele.name);
-    if (ele instanceof Printstmt) {
-      ele.display("txt-box" + ele.name , variables_list);
-    }
-
-    else if (ele instanceof Variable) {
-      if(valid_variable_name("vartxt-box" + ele.name)){
+    if (ele.name && ele instanceof Printstmt) {
+      ele.display("txt-box" + ele.name, variables_list);
+    } else if (ele.name && ele instanceof Variable) {
+      if (valid_variable_name("vartxt-box" + ele.name)) {
         const var_txtbox = document.getElementById("vartxt-box" + ele.name);
         var unique_flag = true;
-        for(const key in variables_list){
+        for (const key in variables_list) {
           if (`${key}` == var_txtbox.value) {
             console.log("redeclaration is not allowd");
             unique_flag = false;
             break;
           }
         }
-        if(unique_flag == true){
+        if (unique_flag == true) {
           variables_list[var_txtbox.value] = 0;
         }
-
       }
- 
-    }
-
-    else if(ele instanceof Assignment){
+    } else if (ele instanceof Assignment) {
       ele.assign("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
-
-    }
-    else if(ele instanceof Addition){
+    } else if (ele instanceof Addition) {
       console.log("----reached here------" + ele.name);
-      ele.doadd("txt-box-LHS" + ele.name , "txt-box-RHS" + ele.name , "txt-box-add" + ele.name);
-    }
-    else if(ele instanceof Comparison){
+      ele.doadd(
+        "txt-box-LHS" + ele.name,
+        "txt-box-RHS" + ele.name,
+        "txt-box-add" + ele.name
+      );
+    } else if (ele instanceof Comparison) {
       ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
-
     }
   }
 
@@ -158,4 +181,3 @@ function Runprog() {
 
   // prln.display();
 }
-

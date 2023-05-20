@@ -1,4 +1,4 @@
-import { variables_list } from "./index.js"
+import { variables_list } from "./index.js";
 
 export class BaseBlock {
   static instanceCount = 0;
@@ -27,7 +27,7 @@ export class BaseBlock {
     header.textContent = this.getHeaderText();
     newBlock.appendChild(header);
 
-    newBlock.addEventListener('dragstart', drag);
+    newBlock.addEventListener("dragstart", drag);
     return newBlock;
   }
 
@@ -72,7 +72,7 @@ export class Printstmt extends BaseBlock {
 
   // Rest of the methods specific to Printstmt class
   display(txtboxid, variables_list) {
-    console.log("text id = " + txtboxid)
+    console.log("text id = " + txtboxid);
     const txtbox = document.getElementById(txtboxid);
     const parent = txtbox.parentNode;
     const childrenblocks = parent.children;
@@ -83,43 +83,40 @@ export class Printstmt extends BaseBlock {
       var childid = childrenblocks[i].id;
       console.log("child id is " + childid);
       if (blocknamepattern.test(childid)) {
-        const blockchild = document.getElementById(childid)
+        const blockchild = document.getElementById(childid);
         var varchild = blockchild.children;
-          for(let j = 0 ; j < varchild.length ; j++)
-            var varchildid = varchild[j].id; 
-              if(varchildid.includes("txt")) {
-                variableName = document.getElementById(varchildid).value
-                variableValue = variables_list[variableName];
+        for (let j = 0; j < varchild.length; j++)
+          var varchildid = varchild[j].id;
+        if (varchildid.includes("txt")) {
+          variableName = document.getElementById(varchildid).value;
+          variableValue = variables_list[variableName];
 
-                break;
-        // var flag = false;
-        // for (const key in variables_list) {
-        //   if (`${key}` == variableName) {
-        //     variableValue = variables_list[key];
-        //     flag = true;
-        //   }
-        // }
-            
+          break;
+          // var flag = false;
+          // for (const key in variables_list) {
+          //   if (`${key}` == variableName) {
+          //     variableValue = variables_list[key];
+          //     flag = true;
+          //   }
+          // }
+        }
+        break;
       }
-      break;
-    }  
-  }
-  
+    }
+
     console.log("value of variable is : " + variableName);
     var txt = "";
     if (!variableValue) {
       txt = document.createTextNode(txtbox.value + "\n");
-    }
-    else {
+    } else {
       txt = document.createTextNode(txtbox.value + variableValue + "\n");
     }
 
     // console.log("print = "+ txt);
     var terminal = document.getElementById("Terminal");
     terminal.appendChild(txt);
-    terminal.innerHTML = terminal.innerHTML.replace('\n', '<br>');
+    terminal.innerHTML = terminal.innerHTML.replace("\n", "<br>");
   }
-
 }
 
 export class Variable extends BaseBlock {
@@ -168,15 +165,14 @@ export class BinaryOp extends BaseBlock {
   }
 
   getSymbolElement() {
-
     return null;
   }
 
   create() {
     var newBlock = super.create();
 
-    var rowContainer = document.createElement('div');
-    rowContainer.style.display = 'inline-block';
+    var rowContainer = document.createElement("div");
+    rowContainer.style.display = "inline-block";
 
     var input_LHS = document.createElement("input");
     input_LHS.setAttribute("type", "text");
@@ -199,7 +195,6 @@ export class BinaryOp extends BaseBlock {
 
     return newBlock;
   }
-
 }
 
 export class Assignment extends BinaryOp {
@@ -217,7 +212,7 @@ export class Assignment extends BinaryOp {
   }
 
   getSymbolElement() {
-    const equalsSymbol = document.createTextNode(' = ');
+    const equalsSymbol = document.createTextNode(" = ");
     return equalsSymbol;
   }
 
@@ -254,9 +249,7 @@ export class Assignment extends BinaryOp {
       variables_list[LHS_txt.value] = RHS_txt.value;
       console.log("value is assigned");
       return;
-    }
-
-    else if (valid_variable_name(txtboxid_RHS)) {
+    } else if (valid_variable_name(txtboxid_RHS)) {
       var rflag = false;
       for (const key in variables_list) {
         if (`${key}` == RHS_txt.value) {
@@ -268,19 +261,15 @@ export class Assignment extends BinaryOp {
         console.log("undefined variable on RHS");
         return;
       }
-      variables_list[LHS_txt.value] = variables_list[RHS_txt.value]
+      variables_list[LHS_txt.value] = variables_list[RHS_txt.value];
       console.log("value is assigned");
       return;
     }
     return;
-
-
-
-
   }
 }
 
-export class Addition extends BaseBlock{
+export class Addition extends BaseBlock {
   constructor() {
     super();
     console.log("addition block initiated");
@@ -294,11 +283,11 @@ export class Addition extends BaseBlock{
     return "ADD";
   }
 
-  create(){
-    var newblock = super.create()
+  create() {
+    var newblock = super.create();
 
-    var rowContainer = document.createElement('div');
-    rowContainer.style.display = 'inline-block';
+    var rowContainer = document.createElement("div");
+    rowContainer.style.display = "inline-block";
 
     var input_LHS = document.createElement("input");
     input_LHS.setAttribute("type", "text");
@@ -321,7 +310,6 @@ export class Addition extends BaseBlock{
 
     rowContainer.appendChild(input_RHS);
 
-
     const addsymbol = document.createTextNode(" + ");
     rowContainer.appendChild(addsymbol);
 
@@ -335,52 +323,53 @@ export class Addition extends BaseBlock{
     rowContainer.appendChild(input_add);
     newblock.appendChild(rowContainer);
     return newblock;
-    
   }
 
-  doadd(txtboxeqid , txtboxLHSid , txtboxRHSid){
+  doadd(txtboxeqid, txtboxLHSid, txtboxRHSid) {
     console.log("---------started adding-------");
     const eqele = document.getElementById(txtboxeqid);
     const LHSele = document.getElementById(txtboxLHSid);
     const RHSele = document.getElementById(txtboxRHSid);
 
-    if (!valid_string(txtboxRHSid) && !valid_number(txtboxRHSid) && !valid_string(txtboxLHSid) && !valid_number(txtboxLHSid)) {
+    if (
+      !valid_string(txtboxRHSid) &&
+      !valid_number(txtboxRHSid) &&
+      !valid_string(txtboxLHSid) &&
+      !valid_number(txtboxLHSid)
+    ) {
       return;
     }
 
-    var lhskey = 0 , rhskey = 0 , eqkey = 0;
+    var lhskey = 0,
+      rhskey = 0,
+      eqkey = 0;
     // var flag = false;
     for (const key in variables_list) {
       if (`${key}` == eqele.value) {
-           eqkey = key;
-
-      }
-      else if(`${key}` == LHSele.value){
-         lhskey = key;
-      }
-      else if(`${key}` == RHSele.value){
+        eqkey = key;
+      } else if (`${key}` == LHSele.value) {
+        lhskey = key;
+      } else if (`${key}` == RHSele.value) {
         rhskey = key;
       }
 
-      if(lhskey && rhskey ){
-        var answer = parseFloat(variables_list[lhskey])  + parseFloat(variables_list[rhskey]) ;
+      if (lhskey && rhskey) {
+        var answer =
+          parseFloat(variables_list[lhskey]) +
+          parseFloat(variables_list[rhskey]);
         variables_list[eqkey] = answer.toString();
         console.log("-added using 3 variables");
         return;
-
-      }
-      else if(eqkey){
+      } else if (eqkey) {
         var answer = parseFloat(LHSele.value) + parseFloat(RHSele.value);
-        variables_list[eqkey]= answer.toString();
+        variables_list[eqkey] = answer.toString();
         console.log("added in one variable");
         return;
-      }
-      else{
-          console.log("invalid input");
-          return; 
+      } else {
+        console.log("invalid input");
+        return;
       }
     }
-    
   }
 }
 export class Comparison extends BinaryOp {
@@ -439,16 +428,16 @@ export class Comparison extends BinaryOp {
     const selectedOption = dropdown.options[dropdown.selectedIndex];
     const selectedValue = selectedOption.value;
     const selectedText = selectedOption.text;
-  
+
     console.log("Selected value: " + selectedValue);
     console.log("Selected text: " + selectedText);
-  
+
     // Rest of the compare method implementation
   }
-  
 }
 export function valid_variable_name(txtboxid) {
   var txtbox = document.getElementById(txtboxid);
+  if(txtbox){
   const var_name = txtbox.value;
   const variableNameRegex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
 
@@ -459,6 +448,7 @@ export function valid_variable_name(txtboxid) {
     console.log("The input is not a valid variable name in C.");
     return false;
   }
+}
 }
 
 export function valid_string(txtboxid) {
@@ -476,11 +466,9 @@ export function valid_string(txtboxid) {
 }
 
 export function valid_number(txtboxid) {
-
   var txtbox = document.getElementById(txtboxid);
   const input_txt = txtbox.value;
   const numberPattern = /^-?\d+(\.\d+)?$/;
-
 
   if (numberPattern.test(input_txt)) {
     console.log("The input is a valid number.");
@@ -490,4 +478,3 @@ export function valid_number(txtboxid) {
     return false;
   }
 }
-
