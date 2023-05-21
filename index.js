@@ -160,7 +160,7 @@ function Runprog() {
           variables_list[var_txtbox.value] = 0;
         }
       }
-
+    } else if (ele.name && ele instanceof Assignment) {
       ele.assign("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
     } else if (ele instanceof Arithmatic) {
       console.log("----reached here------" + ele.name);

@@ -406,7 +406,7 @@ export class Comparison extends BinaryOp {
 
     else if (rhskey) {
       console.log("compare one variable");
-      if (parseFloat(variables_list[rhskey]) > parseFloat(LHSele.value)) {
+      if (parseFloat(variables_list[rhskey]) < parseFloat(LHSele.value)) {
         return true;
       }
       return false;
@@ -441,7 +441,7 @@ export class Comparison extends BinaryOp {
 
     else if (rhskey) {
       console.log("compare one variable");
-      if (parseFloat(variables_list[rhskey]) < parseFloat(LHSele.value)) {
+      if (parseFloat(variables_list[rhskey]) > parseFloat(LHSele.value)) {
         return true;
       }
       return false;
@@ -476,7 +476,7 @@ export class Comparison extends BinaryOp {
 
     else if (rhskey) {
       console.log("compare one variable");
-      if (parseFloat(variables_list[rhskey]) >= parseFloat(LHSele.value)) {
+      if (parseFloat(variables_list[rhskey]) <= parseFloat(LHSele.value)) {
         return true;
       }
       return false;
@@ -511,7 +511,7 @@ export class Comparison extends BinaryOp {
 
     else if (rhskey) {
       console.log("compare one variable");
-      if (parseFloat(variables_list[rhskey]) <= parseFloat(LHSele.value)) {
+      if (parseFloat(variables_list[rhskey]) >= parseFloat(LHSele.value)) {
         return true;
       }
       return false;
