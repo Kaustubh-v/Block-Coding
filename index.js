@@ -1,4 +1,11 @@
-import { Printstmt, Variable, Assignment, Comparison, valid_variable_name} from "./language.js";
+import {
+  Printstmt,
+  Variable,
+  Assignment,
+  valid_variable_name,
+  Arithmatic,
+  Comparison,
+} from "./language.js";
 const myButton = document.getElementById("run");
 myButton.addEventListener("click", function () { Runprog() });
 
@@ -11,8 +18,12 @@ myButton2.addEventListener("click", function () { CreateBlock("varblock") });
 const myButton3 = document.getElementById("assign");
 myButton3.addEventListener("click", function () { CreateBlock("assignblock") });
 
-const myButton4 = document.getElementById("compare");
-myButton4.addEventListener("click", function () { CreateBlock("compareblock") });
+const myButton4 = document.getElementById("arithmatic");
+myButton4.addEventListener("click", function () {
+  CreateBlock("arithmaticblock");
+});
+const myButton5 = document.getElementById("compare");
+myButton5.addEventListener("click", function () { CreateBlock("compareblock") });
 
 var orderofelmnts = [];
 export let variables_list = new Object();
@@ -79,6 +90,13 @@ function CreateBlock(block_type) {
     parent.appendChild(newblock);
     orderofelmnts.push(assblck);
   }
+ else if (block_type == "arithmaticblock") {
+  var artblck = new Arithmatic();
+  var newblock = artblck.create();
+  var parent = document.getElementById("Menu");
+  parent.appendChild(newblock);
+  orderofelmnts.push(artblck);
+}
 
   else if (block_type == "compareblock") {
     var assblck = new Comparison();
@@ -145,6 +163,15 @@ function Runprog() {
 
     else if(ele instanceof Assignment){
       ele.assign("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
+    } else if (ele instanceof Arithmatic) {
+      console.log("----reached here------" + ele.name);
+      ele.calculate(
+        "txt-box-LHS" + ele.name,
+        "txt-box-RHS" + ele.name,
+        "txt-box-add" + ele.name
+      );
+    } else if (ele instanceof Comparison) {
+      ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
 
     }
 

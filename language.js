@@ -262,6 +262,171 @@ export class Assignment extends BinaryOp {
   }
 }
 
+export class Arithmatic extends BaseBlock {
+  static operatorno = 0;
+  constructor() {
+    super();
+    console.log("addition block initiated");
+  }
+
+  getBlockColor() {
+    return "yellow";
+  }
+
+  getHeaderText() {
+    return "Arithmatic";
+  }
+
+  getSymbolElement() {
+    const dropdown = document.createElement("select");
+    dropdown.id = "dropdown" + this.name;
+
+    const option1 = document.createElement("option");
+    option1.value = "+";
+    option1.text = "+";
+    dropdown.appendChild(option1);
+
+    const option2 = document.createElement("option");
+    option2.value = "-";
+    option2.text = "-";
+    dropdown.appendChild(option2);
+
+    const option3 = document.createElement("option");
+    option3.value = "*";
+    option3.text = "*";
+    dropdown.appendChild(option3);
+
+    const option4 = document.createElement("option");
+    option4.value = "/";
+    option4.text = "/";
+    dropdown.appendChild(option4);
+
+    const option5 = document.createElement("option");
+    option5.value = "%";
+    option5.text = "%";
+    dropdown.appendChild(option5);
+
+    return dropdown;
+  }
+
+  create() {
+    var newblock = super.create();
+
+    var rowContainer = document.createElement("div");
+    rowContainer.style.display = "inline-block";
+
+    var input_LHS = document.createElement("input");
+    input_LHS.setAttribute("type", "text");
+    input_LHS.classList.add("Text-Box");
+    input_LHS.id = "txt-box-LHS" + this.name;
+    console.log("input id = " + "txt-box-LHS" + this.name);
+    input_LHS.setAttribute("placeholder", "Enter VAR");
+
+    var input_RHS = document.createElement("input");
+    input_RHS.setAttribute("type", "text");
+    input_RHS.classList.add("Text-Box");
+    input_RHS.id = "txt-box-RHS" + this.name;
+    console.log("input id = " + "txt-box-RHS" + this.name);
+    input_RHS.setAttribute("placeholder", "Enter LHS");
+
+    rowContainer.appendChild(input_LHS);
+
+    const eqsymbol = document.createTextNode(" = ");
+    rowContainer.appendChild(eqsymbol);
+
+    rowContainer.appendChild(input_RHS);
+
+    const addsymbol = this.getSymbolElement();
+    rowContainer.appendChild(addsymbol);
+
+    var input_add = document.createElement("input");
+    input_add.setAttribute("type", "text");
+    input_add.classList.add("Text-Box");
+    input_add.id = "txt-box-add" + this.name;
+    console.log("input id = " + "txt-box-add" + this.name);
+    input_add.setAttribute("placeholder", "Enter RHS");
+
+    rowContainer.appendChild(input_add);
+    newblock.appendChild(rowContainer);
+    return newblock;
+  }
+
+
+  doadd(txtboxeqid, txtboxLHSid, txtboxRHSid) {
+    console.log("---------started adding-------");
+    const eqele = document.getElementById(txtboxeqid);
+    const LHSele = document.getElementById(txtboxLHSid);
+    const RHSele = document.getElementById(txtboxRHSid);
+
+    // if (
+    //   !valid_string(txtboxRHSid) &&
+    //   !valid_number(txtboxRHSid) &&
+    //   !valid_string(txtboxLHSid) &&
+    //   !valid_number(txtboxLHSid)
+    // ) {
+    //   return;
+    // }
+
+    var lhskey = 0,
+      rhskey = 0,
+      eqkey = 0;
+    // var flag = false;
+    for (const key in variables_list) {
+      if (`${key}` == eqele.value) {
+        eqkey = key;
+        console.log("eq key = "+ eqkey);
+      } 
+      if (`${key}` == LHSele.value) {
+        lhskey = key;
+        console.log("lhs key = "+ lhskey);
+      } 
+      if (`${key}` == RHSele.value) {
+        rhskey = key;
+        console.log("rhs key = "+ rhskey);
+      }
+    }
+      if (lhskey && rhskey) {
+        var answer =
+          parseFloat(variables_list[lhskey]) +
+          parseFloat(variables_list[rhskey]);
+        variables_list[eqkey] = answer.toString();
+        console.log("-added using 3 variables");
+        return;
+      } else if (eqkey) {
+        var answer = parseFloat(LHSele.value) + parseFloat(RHSele.value);
+        variables_list[eqkey] = answer.toString();
+        console.log("added in one variable");
+        return;
+      } else {
+        console.log("invalid input");
+        return;
+      }
+    
+  }
+
+calculate( txtboxeqid, txtboxLHSid, txtboxRHSid){
+  const dropmenu = document.getElementById("dropdown" + this.name);
+  const selectedop = dropmenu.value;
+
+  console.log("operatorno is = " + this.operatorno);
+  if(selectedop == "+"){
+    this.doadd(txtboxeqid, txtboxLHSid, txtboxRHSid);
+  }
+  else if(selectedop == "-"){
+
+  }
+  else if(selectedop == "*"){
+
+  }
+  else if(selectedop == "/"){
+
+  }
+
+}
+
+}
+
+
 export class Comparison extends BinaryOp {
   constructor() {
     super();
@@ -315,7 +480,7 @@ export class Comparison extends BinaryOp {
 
   compare(txtboxid_LHS, txtboxid_RHS) {
     const dropdown = document.getElementById("dropdown" + this.name);
-    const selectedOption = dropdown.options[dropdown.selectedIndex];
+    const selectedOption = dropdown.options(dropdown.selectedIndex);
     const selectedValue = selectedOption.value;
     const selectedText = selectedOption.text;
 
