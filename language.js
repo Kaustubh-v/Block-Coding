@@ -311,8 +311,10 @@ export class Arithmatic extends BaseBlock {
   create() {
     var newblock = super.create();
 
+
     var rowContainer = document.createElement("div");
     rowContainer.style.display = "inline-block";
+
 
     var input_LHS = document.createElement("input");
     input_LHS.setAttribute("type", "text");
@@ -320,6 +322,7 @@ export class Arithmatic extends BaseBlock {
     input_LHS.id = "txt-box-LHS" + this.name;
     console.log("input id = " + "txt-box-LHS" + this.name);
     input_LHS.setAttribute("placeholder", "Enter VAR");
+
 
     var input_RHS = document.createElement("input");
     input_RHS.setAttribute("type", "text");
@@ -557,6 +560,7 @@ calculate( txtboxeqid, txtboxLHSid, txtboxRHSid){
 
 }
 
+
 }
 
 
@@ -634,34 +638,5 @@ export function valid_number(txtboxid) {
   }
 }
 
-export function get_value_from_txtbox_text(txtbox_txt) {
 
-  const stringPattern = /^"([^"\\]|\\.)*"$/;
-  const numberPattern = /^-?\d+(\.\d+)?$/;
-  if (stringPattern.test(txtbox_txt) || numberPattern.test(txtbox_txt)) {
-    return txtbox_txt;
-  }
-
-  else if(!variables_list[txtbox_txt]){
-    return variables_list[txtbox_txt]
-  }
-}
-
-export function same_dtype(LHS_value, RHS_value) {
-
-  const stringPattern = /^"([^"\\]|\\.)*"$/;
-  const numberPattern = /^-?\d+(\.\d+)?$/;
-
-  if(stringPattern.test(LHS_value) && stringPattern.test(RHS_value)){
-    return true;
-  }
-  else if(numberPattern.test(LHS_value) && numberPattern.test(RHS_value)){
-    return true;
-  }
-  else{
-    return false;
-  }
-
-
-}
 
