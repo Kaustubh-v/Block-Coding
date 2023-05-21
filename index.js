@@ -1,18 +1,37 @@
-import { Printstmt, Variable, Assignment, Comparison, valid_variable_name } from "./language.js";
+import {
+  Printstmt,
+  Variable,
+  Assignment,
+  valid_variable_name,
+  Arithmatic,
+} from "./language.js";
+
 const myButton = document.getElementById("run");
-myButton.addEventListener("click", function () { Runprog() });
+myButton.addEventListener("click", function () {
+  Runprog();
+});
 
 const myButton1 = document.getElementById("print");
-myButton1.addEventListener("click", function () { CreateBlock("printblock") });
+myButton1.addEventListener("click", function () {
+  CreateBlock("printblock");
+});
 
 const myButton2 = document.getElementById("variable");
-myButton2.addEventListener("click", function () { CreateBlock("varblock") });
+myButton2.addEventListener("click", function () {
+  CreateBlock("varblock");
+});
 
 const myButton3 = document.getElementById("assign");
-myButton3.addEventListener("click", function () { CreateBlock("assignblock") });
+myButton3.addEventListener("click", function () {
+  CreateBlock("assignblock");
+});
 
-const myButton4 = document.getElementById("compare");
-myButton4.addEventListener("click", function () { CreateBlock("compareblock") });
+const myButton4 = document.getElementById("arithmatic");
+myButton4.addEventListener("click", function () {
+  CreateBlock("arithmaticblock");
+});
+const myButton5 = document.getElementById("compare");
+myButton5.addEventListener("click", function () { CreateBlock("compareblock") });
 
 var orderofelmnts = [];
 export let variables_list = new Object();
@@ -52,7 +71,6 @@ function reorder(elmntarr, orderofexec) {
 }
 
 function CreateBlock(block_type) {
-
   console.log("init" + block_type + " here");
   if (block_type == "printblock") {
     var prnblck = new Printstmt();
@@ -61,39 +79,34 @@ function CreateBlock(block_type) {
     parent.appendChild(newBlock);
     orderofelmnts.push(prnblck);
     // dragElement(newBlock);
-  }
-
-  else if (block_type == "varblock") {
+  } else if (block_type == "varblock") {
     var varblck = new Variable();
     var newBlock = varblck.create();
     var parent = document.getElementById("Menu");
     parent.appendChild(newBlock);
     orderofelmnts.push(varblck);
-
-  }
-
-  else if (block_type == "assignblock") {
+  } else if (block_type == "assignblock") {
     var assblck = new Assignment();
     var newblock = assblck.create();
     var parent = document.getElementById("Menu");
     parent.appendChild(newblock);
     orderofelmnts.push(assblck);
   }
+ else if (block_type == "arithmaticblock") {
+  var artblck = new Arithmatic();
+  var newblock = artblck.create();
+  var parent = document.getElementById("Menu");
+  parent.appendChild(newblock);
+  orderofelmnts.push(artblck);
+}
 
-  else if (block_type == "compareblock") {
-    var assblck = new Comparison();
-    var newblock = assblck.create();
-    var parent = document.getElementById("Menu");
-    parent.appendChild(newblock);
-    orderofelmnts.push(assblck);
-  }
+
   // var parent = document.getElementById("Menu");
   // parent.appendChild(newblock);
 }
 
-
 function getElementsinOrder() {
-  const parentElement = document.getElementById('Canvas'); // Replace 'parent' with the ID of the parent element
+  const parentElement = document.getElementById("Canvas"); // Replace 'parent' with the ID of the parent element
   var elmntarr = [];
   // Get all the children of the parent element
   const children = parentElement.childNodes;
@@ -112,19 +125,19 @@ function getElementsinOrder() {
 
 function Runprog() {
   const terminal = document.getElementById("Terminal");
-  terminal.textContent = '';
-  variables_list = {}
+  terminal.textContent = "";
+  variables_list = {};
 
   const orderofplacement = getElementsinOrder();
   const orderofexec = reorder(orderofelmnts, orderofplacement);
   for (let i = 0; i < orderofexec.length; i++) {
     const ele = orderofexec[i];
     console.log("running = " + ele.name);
-    if (ele instanceof Printstmt) {
-      ele.display("txt-box" + ele.name, variables_list);
-    }
 
-    else if (ele instanceof Variable) {
+    if (ele.name && ele instanceof Printstmt) {
+      ele.display("txt-box" + ele.name, variables_list);
+    } else if (ele.name && ele instanceof Variable) {
+
       if (valid_variable_name("vartxt-box" + ele.name)) {
         const var_txtbox = document.getElementById("vartxt-box" + ele.name);
         var unique_flag = true;
@@ -138,13 +151,18 @@ function Runprog() {
         if (unique_flag == true) {
           variables_list[var_txtbox.value] = 0;
         }
-
       }
 
-    }
-
-    else if (ele instanceof Assignment) {
       ele.assign("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
+    } else if (ele instanceof Arithmatic) {
+      console.log("----reached here------" + ele.name);
+      ele.calculate(
+        "txt-box-LHS" + ele.name,
+        "txt-box-RHS" + ele.name,
+        "txt-box-add" + ele.name
+      );
+    } else if (ele instanceof Comparison) {
+      ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
 
     }
 
@@ -154,7 +172,6 @@ function Runprog() {
 
 
     }
-
   }
 
   console.log("printing variable list for verification");
@@ -164,4 +181,3 @@ function Runprog() {
 
   // prln.display();
 }
-

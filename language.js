@@ -1,4 +1,4 @@
-import { variables_list } from "./index.js"
+import { variables_list } from "./index.js";
 
 export class BaseBlock {
   static instanceCount = 0;
@@ -27,7 +27,7 @@ export class BaseBlock {
     header.textContent = this.getHeaderText();
     newBlock.appendChild(header);
 
-    newBlock.addEventListener('dragstart', drag);
+    newBlock.addEventListener("dragstart", drag);
     return newBlock;
   }
 
@@ -72,7 +72,7 @@ export class Printstmt extends BaseBlock {
 
   // Rest of the methods specific to Printstmt class
   display(txtboxid, variables_list) {
-    console.log("text id = " + txtboxid)
+    console.log("text id = " + txtboxid);
     const txtbox = document.getElementById(txtboxid);
     const parent = txtbox.parentNode;
     const childrenblocks = parent.children;
@@ -83,35 +83,40 @@ export class Printstmt extends BaseBlock {
       var childid = childrenblocks[i].id;
       console.log("child id is " + childid);
       if (blocknamepattern.test(childid)) {
-        const blockchild = document.getElementById(childid)
+        const blockchild = document.getElementById(childid);
         var varchild = blockchild.children;
         for (let j = 0; j < varchild.length; j++)
           var varchildid = varchild[j].id;
         if (varchildid.includes("txt")) {
-          variableName = document.getElementById(varchildid).value
-          break;
+          variableName = document.getElementById(varchildid).value;
+          variableValue = variables_list[variableName];
 
+          break;
+          // var flag = false;
+          // for (const key in variables_list) {
+          //   if (`${key}` == variableName) {
+          //     variableValue = variables_list[key];
+          //     flag = true;
+          //   }
+          // }
         }
         break;
       }
     }
 
-    variableValue = variables_list[variableName];
     console.log("value of variable is : " + variableName);
     var txt = "";
     if (!variableValue) {
       txt = document.createTextNode(txtbox.value + "\n");
-    }
-    else {
+    } else {
       txt = document.createTextNode(txtbox.value + variableValue + "\n");
     }
 
     // console.log("print = "+ txt);
     var terminal = document.getElementById("Terminal");
     terminal.appendChild(txt);
-    terminal.innerHTML = terminal.innerHTML.replace('\n', '<br>');
+    terminal.innerHTML = terminal.innerHTML.replace("\n", "<br>");
   }
-
 }
 
 export class Variable extends BaseBlock {
@@ -160,15 +165,14 @@ export class BinaryOp extends BaseBlock {
   }
 
   getSymbolElement() {
-
     return null;
   }
 
   create() {
     var newBlock = super.create();
 
-    var rowContainer = document.createElement('div');
-    rowContainer.style.display = 'inline-block';
+    var rowContainer = document.createElement("div");
+    rowContainer.style.display = "inline-block";
 
     var input_LHS = document.createElement("input");
     input_LHS.setAttribute("type", "text");
@@ -191,7 +195,6 @@ export class BinaryOp extends BaseBlock {
 
     return newBlock;
   }
-
 }
 
 export class Assignment extends BinaryOp {
@@ -209,7 +212,7 @@ export class Assignment extends BinaryOp {
   }
 
   getSymbolElement() {
-    const equalsSymbol = document.createTextNode(' = ');
+    const equalsSymbol = document.createTextNode(" = ");
     return equalsSymbol;
   }
 
@@ -247,7 +250,7 @@ export class Assignment extends BinaryOp {
         console.log("undefined variable on RHS");
         return;
       }
-      variables_list[LHS_txt.value] = variables_list[RHS_txt.value]
+      variables_list[LHS_txt.value] = variables_list[RHS_txt.value];
       console.log("value is assigned");
       return;
     }
@@ -255,25 +258,22 @@ export class Assignment extends BinaryOp {
       console.log("undefined symbol in RHS");
     }
     return;
-
-
-
-
   }
 }
 
-export class Comparison extends BinaryOp {
+export class Arithmatic extends BaseBlock {
+  static operatorno = 0;
   constructor() {
     super();
-    console.log("comparison block initiated");
+    console.log("addition block initiated");
   }
 
   getBlockColor() {
-    return "orange";
+    return "yellow";
   }
 
   getHeaderText() {
-    return "compare";
+    return "Arithmatic";
   }
 
   getSymbolElement() {
@@ -281,50 +281,290 @@ export class Comparison extends BinaryOp {
     dropdown.id = "dropdown" + this.name;
 
     const option1 = document.createElement("option");
-    option1.value = "==";
-    option1.text = "==";
+    option1.value = "+";
+    option1.text = "+";
     dropdown.appendChild(option1);
 
     const option2 = document.createElement("option");
-    option2.value = "<";
-    option2.text = "<";
+    option2.value = "-";
+    option2.text = "-";
     dropdown.appendChild(option2);
 
     const option3 = document.createElement("option");
-    option3.value = ">";
-    option3.text = ">";
+    option3.value = "*";
+    option3.text = "*";
     dropdown.appendChild(option3);
 
     const option4 = document.createElement("option");
-    option4.value = "<=";
-    option4.text = "<=";
+    option4.value = "/";
+    option4.text = "/";
     dropdown.appendChild(option4);
 
     const option5 = document.createElement("option");
-    option5.value = ">=";
-    option5.text = ">=";
+    option5.value = "%";
+    option5.text = "%";
     dropdown.appendChild(option5);
 
     return dropdown;
   }
 
   create() {
-    var newBlock = super.create();
-    return newBlock;
+    var newblock = super.create();
+
+
+    var rowContainer = document.createElement("div");
+    rowContainer.style.display = "inline-block";
+
+
+    var input_LHS = document.createElement("input");
+    input_LHS.setAttribute("type", "text");
+    input_LHS.classList.add("Text-Box");
+    input_LHS.id = "txt-box-LHS" + this.name;
+    console.log("input id = " + "txt-box-LHS" + this.name);
+    input_LHS.setAttribute("placeholder", "Enter VAR");
+
+
+    var input_RHS = document.createElement("input");
+    input_RHS.setAttribute("type", "text");
+    input_RHS.classList.add("Text-Box");
+    input_RHS.id = "txt-box-RHS" + this.name;
+    console.log("input id = " + "txt-box-RHS" + this.name);
+    input_RHS.setAttribute("placeholder", "Enter LHS");
+
+    rowContainer.appendChild(input_LHS);
+
+    const eqsymbol = document.createTextNode(" = ");
+    rowContainer.appendChild(eqsymbol);
+
+    rowContainer.appendChild(input_RHS);
+
+    const addsymbol = this.getSymbolElement();
+    rowContainer.appendChild(addsymbol);
+
+    var input_add = document.createElement("input");
+    input_add.setAttribute("type", "text");
+    input_add.classList.add("Text-Box");
+    input_add.id = "txt-box-add" + this.name;
+    console.log("input id = " + "txt-box-add" + this.name);
+    input_add.setAttribute("placeholder", "Enter RHS");
+
+    rowContainer.appendChild(input_add);
+    newblock.appendChild(rowContainer);
+    return newblock;
   }
 
-  compare(txtboxid_LHS, txtboxid_RHS) {
-    const dropdown = document.getElementById("dropdown" + this.name);
-    const selectedOption = dropdown.options[dropdown.selectedIndex];
-    const selectedValue = selectedOption.value;
-    // const selectedText = selectedOption.text;
 
-    console.log("Selected value: " + selectedValue);
-
-    const LHS_txt = document.getElementById(txtboxid_LHS);
-    const RHS_txt = document.getElementById(txtboxid_RHS);
+  doadd(eqkey , lhskey , rhskey , LHSele , RHSele) {
+    
+      if (eqkey && lhskey && rhskey) {
+        var answer =
+          parseFloat(variables_list[lhskey]) +
+          parseFloat(variables_list[rhskey]);
+        variables_list[eqkey] = answer.toString();
+        console.log("-added using 3 variables");
+        return;
+      } else if (eqkey && lhskey) {
+        var answer = parseFloat(variables_list[lhskey]) + parseFloat(RHSele.value);
+        variables_list[eqkey] = answer.toString();
+        console.log("added in one variable");
+        return;
+      }else if (eqkey && rhskey) {
+        var answer = parseFloat(variables_list[rhskey]) + parseFloat(LHSele.value);
+        variables_list[eqkey] = answer.toString();
+        console.log("added in one variable");
+        return; 
+      }else if (eqkey) {
+        var answer = parseFloat(LHSele.value) + parseFloat(RHSele.value);
+        variables_list[eqkey] = answer.toString();
+        console.log("added in one variable");
+        return; 
+      } else {
+        console.log("invalid input");
+        return;
+      }
+    
   }
+
+  dosub(eqkey , lhskey , rhskey , LHSele , RHSele) {
+    if (eqkey && lhskey && rhskey) {
+      var answer =
+        parseFloat(variables_list[lhskey]) -
+        parseFloat(variables_list[rhskey]);
+      variables_list[eqkey] = answer.toString();
+      console.log("-added using 3 variables");
+      return;
+    } else if (eqkey && lhskey) {
+      var answer = parseFloat(variables_list[lhskey]) - parseFloat(RHSele.value);
+      variables_list[eqkey] = answer.toString();
+      console.log("added in one variable");
+      return;
+    }else if (eqkey && rhskey) {
+      var answer =  parseFloat(LHSele.value)- parseFloat(variables_list[rhskey]);
+      variables_list[eqkey] = answer.toString();
+      console.log("added in one variable");
+      return; 
+    }else if (eqkey) {
+      var answer = parseFloat(LHSele.value) - parseFloat(RHSele.value);
+      variables_list[eqkey] = answer.toString();
+      console.log("added in one variable");
+      return; 
+    } else {
+      console.log("invalid input");
+      return;
+    }
+  
 }
+
+domul(eqkey , lhskey , rhskey , LHSele , RHSele) {
+  if (eqkey && lhskey && rhskey) {
+    var answer =
+      parseFloat(variables_list[lhskey]) *
+      parseFloat(variables_list[rhskey]);
+    variables_list[eqkey] = answer.toString();
+    console.log("-added using 3 variables");
+    return;
+  } else if (eqkey && lhskey) {
+    var answer = parseFloat(variables_list[lhskey]) * parseFloat(RHSele.value);
+    variables_list[eqkey] = answer.toString();
+    console.log("added in one variable");
+    return;
+  }else if (eqkey && rhskey) {
+    var answer =  parseFloat(LHSele.value)* parseFloat(variables_list[rhskey]);
+    variables_list[eqkey] = answer.toString();
+    console.log("added in one variable");
+    return; 
+  }else if (eqkey) {
+    var answer = parseFloat(LHSele.value) * parseFloat(RHSele.value);
+    variables_list[eqkey] = answer.toString();
+    console.log("added in one variable");
+    return; 
+  } else {
+    console.log("invalid input");
+    return;
+  }
+
+}
+
+dodiv(eqkey , lhskey , rhskey , LHSele , RHSele) {
+  if (eqkey && lhskey && rhskey) {
+    var answer =
+      parseFloat(variables_list[lhskey]) /
+      parseFloat(variables_list[rhskey]);
+    variables_list[eqkey] = answer.toString();
+    console.log("-added using 3 variables");
+    return;
+  } else if (eqkey && lhskey) {
+    var answer = parseFloat(variables_list[lhskey]) / parseFloat(RHSele.value);
+    variables_list[eqkey] = answer.toString();
+    console.log("added in one variable");
+    return;
+  }else if (eqkey && rhskey) {
+    var answer =  parseFloat(LHSele.value)/ parseFloat(variables_list[rhskey]);
+    variables_list[eqkey] = answer.toString();
+    console.log("added in one variable");
+    return; 
+  }else if (eqkey) {
+    var answer = parseFloat(LHSele.value) / parseFloat(RHSele.value);
+    variables_list[eqkey] = answer.toString();
+    console.log("added in one variable");
+    return; 
+  } else {
+    console.log("invalid input");
+    return;
+  }
+
+}
+
+domod(eqkey , lhskey , rhskey , LHSele , RHSele) {
+  if (eqkey && lhskey && rhskey) {
+    var answer =
+      parseFloat(variables_list[lhskey]) %
+      parseFloat(variables_list[rhskey]);
+    variables_list[eqkey] = answer.toString();
+    console.log("-added using 3 variables");
+    return;
+  } else if (eqkey && lhskey) {
+    var answer = parseFloat(variables_list[lhskey]) % parseFloat(RHSele.value);
+    variables_list[eqkey] = answer.toString();
+    console.log("added in one variable");
+    return;
+  }else if (eqkey && rhskey) {
+    var answer =  parseFloat(LHSele.value)% parseFloat(variables_list[rhskey]);
+    variables_list[eqkey] = answer.toString();
+    console.log("added in one variable");
+    return; 
+  }else if (eqkey) {
+    var answer = parseFloat(LHSele.value) % parseFloat(RHSele.value);
+    variables_list[eqkey] = answer.toString();
+    console.log("added in one variable");
+    return; 
+  } else {
+    console.log("invalid input");
+    return;
+  }
+
+}
+
+calculate( txtboxeqid, txtboxLHSid, txtboxRHSid){
+  const dropmenu = document.getElementById("dropdown" + this.name);
+  const selectedop = dropmenu.value;
+  console.log("---------started adding-------");
+    const eqele = document.getElementById(txtboxeqid);
+    const LHSele = document.getElementById(txtboxLHSid);
+    const RHSele = document.getElementById(txtboxRHSid);
+
+    // if (
+    //   !valid_string(txtboxRHSid) &&
+    //   !valid_number(txtboxRHSid) &&
+    //   !valid_string(txtboxLHSid) &&
+    //   !valid_number(txtboxLHSid)
+    // ) {
+    //   return;
+    // }
+
+    var lhskey = 0,
+      rhskey = 0,
+      eqkey = 0;
+    // var flag = false;
+    for (const key in variables_list) {
+      if (`${key}` == eqele.value) {
+        eqkey = key;
+        console.log("eq key = "+ eqkey);
+      } 
+      if (`${key}` == LHSele.value) {
+        lhskey = key;
+        console.log("lhs key = "+ lhskey);
+      } 
+      if (`${key}` == RHSele.value) {
+        rhskey = key;
+        console.log("rhs key = "+ rhskey);
+      }
+    }
+
+  console.log("operatorno is = " + this.operatorno);
+  if(selectedop == "+"){
+    this.doadd(eqkey , lhskey , rhskey , LHSele , RHSele);
+  }
+  else if(selectedop == "-"){
+    this.dosub(eqkey , lhskey , rhskey , LHSele , RHSele);
+  }
+  else if(selectedop == "*"){
+    this.domul(eqkey , lhskey , rhskey , LHSele , RHSele);
+  }
+  else if(selectedop == "/"){
+    this.dodiv(eqkey , lhskey , rhskey , LHSele , RHSele);
+  }
+  else if(selectedop == "%"){
+    this.domod(eqkey , lhskey , rhskey , LHSele , RHSele);
+  }
+
+}
+
+
+}
+
+
+
 export function valid_variable_name(txtboxid) {
   const txtbox = document.getElementById(txtboxid);
   // if(!txtbox){
@@ -341,6 +581,7 @@ export function valid_variable_name(txtboxid) {
     return false;
   }
 }
+
 
 export function is_declared_variable(txtboxid) {
   if (!valid_variable_name(txtboxid)) {
@@ -381,14 +622,12 @@ export function valid_string(txtboxid) {
 }
 
 export function valid_number(txtboxid) {
-
   var txtbox = document.getElementById(txtboxid);
   // if(!txtbox){
   //   return false;
   // }
   const input_txt = txtbox.value;
   const numberPattern = /^-?\d+(\.\d+)?$/;
-
 
   if (numberPattern.test(input_txt)) {
     console.log("The input is a valid number.");
