@@ -4,6 +4,7 @@ import {
   Assignment,
   valid_variable_name,
   Arithmatic,
+  Comparison
 } from "./language.js";
 
 const myButton = document.getElementById("run");
@@ -92,13 +93,20 @@ function CreateBlock(block_type) {
     parent.appendChild(newblock);
     orderofelmnts.push(assblck);
   }
- else if (block_type == "arithmaticblock") {
-  var artblck = new Arithmatic();
-  var newblock = artblck.create();
-  var parent = document.getElementById("Menu");
-  parent.appendChild(newblock);
-  orderofelmnts.push(artblck);
-}
+  else if (block_type == "arithmaticblock") {
+    var artblck = new Arithmatic();
+    var newblock = artblck.create();
+    var parent = document.getElementById("Menu");
+    parent.appendChild(newblock);
+    orderofelmnts.push(artblck);
+  }
+  else if (block_type == "compareblock") {
+    var cmpblck = new Comparison();
+    var newblock = cmpblck.create();
+    var parent = document.getElementById("Menu");
+    parent.appendChild(newblock);
+    orderofelmnts.push(cmpblck);
+  }
 
 
   // var parent = document.getElementById("Menu");
@@ -161,23 +169,24 @@ function Runprog() {
         "txt-box-RHS" + ele.name,
         "txt-box-add" + ele.name
       );
-    } else if (ele instanceof Comparison) {
-      ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
-
     }
 
     else if (ele instanceof Comparison) {
-      ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
+      if (ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name) == true) {
+        console.log("comparison result : true");
+      }
+      else if (ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name) == false) {
+        console.log("comparison result : false");
 
 
-
+      }
     }
-  }
 
-  console.log("printing variable list for verification");
-  for (const key in variables_list) {
-    console.log(`Key: ${key}, Value: ${variables_list[key]}`);
-  }
+    console.log("printing variable list for verification");
+    for (const key in variables_list) {
+      console.log(`Key: ${key}, Value: ${variables_list[key]}`);
+    }
 
-  // prln.display();
+    // prln.display();
+  }
 }
