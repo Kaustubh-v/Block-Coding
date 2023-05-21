@@ -4,6 +4,7 @@ import {
   Assignment,
   valid_variable_name,
   Arithmatic,
+  Comparison
 } from "./language.js";
 const myButton = document.getElementById("run");
 myButton.addEventListener("click", function () {
@@ -91,13 +92,20 @@ function CreateBlock(block_type) {
     parent.appendChild(newblock);
     orderofelmnts.push(assblck);
   }
- else if (block_type == "arithmaticblock") {
-  var artblck = new Arithmatic();
-  var newblock = artblck.create();
-  var parent = document.getElementById("Menu");
-  parent.appendChild(newblock);
-  orderofelmnts.push(artblck);
-}
+  else if (block_type == "arithmaticblock") {
+    var artblck = new Arithmatic();
+    var newblock = artblck.create();
+    var parent = document.getElementById("Menu");
+    parent.appendChild(newblock);
+    orderofelmnts.push(artblck);
+  }
+  else if(block_type == "compareblock"){
+    var cmpblck = new Comparison();
+    var newblock = cmpblck.create();
+    var parent = document.getElementById("Menu");
+    parent.appendChild(newblock);
+    orderofelmnts.push(cmpblck);
+  }
 
 
   // var parent = document.getElementById("Menu");
@@ -158,16 +166,13 @@ function Runprog() {
         "txt-box-RHS" + ele.name,
         "txt-box-add" + ele.name
       );
-    } else if (ele instanceof Comparison) {
-      ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
-
     }
 
-    else if(ele instanceof Comparison){
-      if(ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name) == true){
+    else if (ele instanceof Comparison) {
+      if (ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name) == true) {
         console.log("comparison result : true");
       }
-      else if(ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name) == false){
+      else if (ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name) == false) {
         console.log("comparison result : false");
 
       }
