@@ -88,7 +88,8 @@ export class Printstmt extends BaseBlock {
         for (let j = 0; j < varchild.length; j++)
           var varchildid = varchild[j].id;
         if (varchildid.includes("txt")) {
-          variableName = document.getElementById(varchildid).value;
+          var variableNameEle = document.getElementById(varchildid);
+          variableName = variableNameEle.value;
           variableValue = variables_list[variableName];
 
           break;
