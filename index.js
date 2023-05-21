@@ -3,8 +3,7 @@ import {
   Variable,
   Assignment,
   valid_variable_name,
-  Addition,
-  Comparison,
+  Arithmatic,
 } from "./language.js";
 const myButton = document.getElementById("run");
 myButton.addEventListener("click", function () {
@@ -26,15 +25,13 @@ myButton3.addEventListener("click", function () {
   CreateBlock("assignblock");
 });
 
-const myButton4 = document.getElementById("addition");
+const myButton4 = document.getElementById("arithmatic");
 myButton4.addEventListener("click", function () {
-  CreateBlock("additionblock");
+  CreateBlock("arithmaticblock");
 });
+const myButton5 = document.getElementById("compare");
+myButton5.addEventListener("click", function () { CreateBlock("compareblock") });
 
-const Button5 = document.getElementById("compare");
-Button5.addEventListener("click", function () {
-  CreateBlock("compareblock");
-});
 var orderofelmnts = [];
 export let variables_list = new Object();
 
@@ -94,21 +91,13 @@ function CreateBlock(block_type) {
     parent.appendChild(newblock);
     orderofelmnts.push(assblck);
   }
- else if (block_type == "additionblock") {
-  var addblck = new Addition();
-  var newblock = addblck.create();
+ else if (block_type == "arithmaticblock") {
+  var artblck = new Arithmatic();
+  var newblock = artblck.create();
   var parent = document.getElementById("Menu");
   parent.appendChild(newblock);
-  orderofelmnts.push(addblck);
+  orderofelmnts.push(artblck);
 }
-  else if (block_type == "compareblock") {
-  var compblck = new Comparison();
-  var newblock = compblck.create();
-  var parent = document.getElementById("Menu");
-  parent.appendChild(newblock);
-  orderofelmnts.push(compblck);
-}
-
 
 
   // var parent = document.getElementById("Menu");
@@ -162,15 +151,27 @@ function Runprog() {
       }
     } else if (ele instanceof Assignment) {
       ele.assign("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
-    } else if (ele instanceof Addition) {
+    } else if (ele instanceof Arithmatic) {
       console.log("----reached here------" + ele.name);
-      ele.doadd(
+      ele.calculate(
         "txt-box-LHS" + ele.name,
         "txt-box-RHS" + ele.name,
         "txt-box-add" + ele.name
       );
     } else if (ele instanceof Comparison) {
       ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
+
+    }
+
+    else if(ele instanceof Comparison){
+      if(ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name) == true){
+        console.log("comparison result : true");
+      }
+      else if(ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name) == false){
+        console.log("comparison result : false");
+
+      }
+
     }
   }
 

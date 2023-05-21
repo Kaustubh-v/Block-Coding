@@ -233,14 +233,7 @@ export class Assignment extends BinaryOp {
       return;
     }
 
-    var lflag = false;
-    for (const key in variables_list) {
-      if (`${key}` == LHS_txt.value) {
-        lflag = true;
-        break;
-      }
-    }
-    if (!lflag) {
+    if (!is_declared_variable(txtboxid_LHS)) {
       console.log("undefined variable on LHS");
       return;
     }
@@ -249,15 +242,11 @@ export class Assignment extends BinaryOp {
       variables_list[LHS_txt.value] = RHS_txt.value;
       console.log("value is assigned");
       return;
-    } else if (valid_variable_name(txtboxid_RHS)) {
-      var rflag = false;
-      for (const key in variables_list) {
-        if (`${key}` == RHS_txt.value) {
-          rflag = true;
-          break;
-        }
-      }
-      if (rflag == false) {
+    }
+
+    else if (valid_variable_name(txtboxid_RHS)) {
+
+      if (!is_declared_variable(txtboxid_RHS)) {
         console.log("undefined variable on RHS");
         return;
       }
@@ -265,11 +254,15 @@ export class Assignment extends BinaryOp {
       console.log("value is assigned");
       return;
     }
+    else {
+      console.log("undefined symbol in RHS");
+    }
     return;
   }
 }
 
-export class Addition extends BaseBlock {
+export class Arithmatic extends BaseBlock {
+  static operatorno = 0;
   constructor() {
     super();
     console.log("addition block initiated");
@@ -280,7 +273,39 @@ export class Addition extends BaseBlock {
   }
 
   getHeaderText() {
-    return "ADD";
+    return "Arithmatic";
+  }
+
+  getSymbolElement() {
+    const dropdown = document.createElement("select");
+    dropdown.id = "dropdown" + this.name;
+
+    const option1 = document.createElement("option");
+    option1.value = "+";
+    option1.text = "+";
+    dropdown.appendChild(option1);
+
+    const option2 = document.createElement("option");
+    option2.value = "-";
+    option2.text = "-";
+    dropdown.appendChild(option2);
+
+    const option3 = document.createElement("option");
+    option3.value = "*";
+    option3.text = "*";
+    dropdown.appendChild(option3);
+
+    const option4 = document.createElement("option");
+    option4.value = "/";
+    option4.text = "/";
+    dropdown.appendChild(option4);
+
+    const option5 = document.createElement("option");
+    option5.value = "%";
+    option5.text = "%";
+    dropdown.appendChild(option5);
+
+    return dropdown;
   }
 
   create() {
@@ -310,7 +335,7 @@ export class Addition extends BaseBlock {
 
     rowContainer.appendChild(input_RHS);
 
-    const addsymbol = document.createTextNode(" + ");
+    const addsymbol = this.getSymbolElement();
     rowContainer.appendChild(addsymbol);
 
     var input_add = document.createElement("input");
@@ -325,20 +350,174 @@ export class Addition extends BaseBlock {
     return newblock;
   }
 
-  doadd(txtboxeqid, txtboxLHSid, txtboxRHSid) {
-    console.log("---------started adding-------");
+
+  doadd(eqkey , lhskey , rhskey , LHSele , RHSele) {
+    
+      if (eqkey && lhskey && rhskey) {
+        var answer =
+          parseFloat(variables_list[lhskey]) +
+          parseFloat(variables_list[rhskey]);
+        variables_list[eqkey] = answer.toString();
+        console.log("-added using 3 variables");
+        return;
+      } else if (eqkey && lhskey) {
+        var answer = parseFloat(variables_list[lhskey]) + parseFloat(RHSele.value);
+        variables_list[eqkey] = answer.toString();
+        console.log("added in one variable");
+        return;
+      }else if (eqkey && rhskey) {
+        var answer = parseFloat(variables_list[rhskey]) + parseFloat(LHSele.value);
+        variables_list[eqkey] = answer.toString();
+        console.log("added in one variable");
+        return; 
+      }else if (eqkey) {
+        var answer = parseFloat(LHSele.value) + parseFloat(RHSele.value);
+        variables_list[eqkey] = answer.toString();
+        console.log("added in one variable");
+        return; 
+      } else {
+        console.log("invalid input");
+        return;
+      }
+    
+  }
+
+  dosub(eqkey , lhskey , rhskey , LHSele , RHSele) {
+    if (eqkey && lhskey && rhskey) {
+      var answer =
+        parseFloat(variables_list[lhskey]) -
+        parseFloat(variables_list[rhskey]);
+      variables_list[eqkey] = answer.toString();
+      console.log("-added using 3 variables");
+      return;
+    } else if (eqkey && lhskey) {
+      var answer = parseFloat(variables_list[lhskey]) - parseFloat(RHSele.value);
+      variables_list[eqkey] = answer.toString();
+      console.log("added in one variable");
+      return;
+    }else if (eqkey && rhskey) {
+      var answer =  parseFloat(LHSele.value)- parseFloat(variables_list[rhskey]);
+      variables_list[eqkey] = answer.toString();
+      console.log("added in one variable");
+      return; 
+    }else if (eqkey) {
+      var answer = parseFloat(LHSele.value) - parseFloat(RHSele.value);
+      variables_list[eqkey] = answer.toString();
+      console.log("added in one variable");
+      return; 
+    } else {
+      console.log("invalid input");
+      return;
+    }
+  
+}
+
+domul(eqkey , lhskey , rhskey , LHSele , RHSele) {
+  if (eqkey && lhskey && rhskey) {
+    var answer =
+      parseFloat(variables_list[lhskey]) *
+      parseFloat(variables_list[rhskey]);
+    variables_list[eqkey] = answer.toString();
+    console.log("-added using 3 variables");
+    return;
+  } else if (eqkey && lhskey) {
+    var answer = parseFloat(variables_list[lhskey]) * parseFloat(RHSele.value);
+    variables_list[eqkey] = answer.toString();
+    console.log("added in one variable");
+    return;
+  }else if (eqkey && rhskey) {
+    var answer =  parseFloat(LHSele.value)* parseFloat(variables_list[rhskey]);
+    variables_list[eqkey] = answer.toString();
+    console.log("added in one variable");
+    return; 
+  }else if (eqkey) {
+    var answer = parseFloat(LHSele.value) * parseFloat(RHSele.value);
+    variables_list[eqkey] = answer.toString();
+    console.log("added in one variable");
+    return; 
+  } else {
+    console.log("invalid input");
+    return;
+  }
+
+}
+
+dodiv(eqkey , lhskey , rhskey , LHSele , RHSele) {
+  if (eqkey && lhskey && rhskey) {
+    var answer =
+      parseFloat(variables_list[lhskey]) /
+      parseFloat(variables_list[rhskey]);
+    variables_list[eqkey] = answer.toString();
+    console.log("-added using 3 variables");
+    return;
+  } else if (eqkey && lhskey) {
+    var answer = parseFloat(variables_list[lhskey]) / parseFloat(RHSele.value);
+    variables_list[eqkey] = answer.toString();
+    console.log("added in one variable");
+    return;
+  }else if (eqkey && rhskey) {
+    var answer =  parseFloat(LHSele.value)/ parseFloat(variables_list[rhskey]);
+    variables_list[eqkey] = answer.toString();
+    console.log("added in one variable");
+    return; 
+  }else if (eqkey) {
+    var answer = parseFloat(LHSele.value) / parseFloat(RHSele.value);
+    variables_list[eqkey] = answer.toString();
+    console.log("added in one variable");
+    return; 
+  } else {
+    console.log("invalid input");
+    return;
+  }
+
+}
+
+domod(eqkey , lhskey , rhskey , LHSele , RHSele) {
+  if (eqkey && lhskey && rhskey) {
+    var answer =
+      parseFloat(variables_list[lhskey]) %
+      parseFloat(variables_list[rhskey]);
+    variables_list[eqkey] = answer.toString();
+    console.log("-added using 3 variables");
+    return;
+  } else if (eqkey && lhskey) {
+    var answer = parseFloat(variables_list[lhskey]) % parseFloat(RHSele.value);
+    variables_list[eqkey] = answer.toString();
+    console.log("added in one variable");
+    return;
+  }else if (eqkey && rhskey) {
+    var answer =  parseFloat(LHSele.value)% parseFloat(variables_list[rhskey]);
+    variables_list[eqkey] = answer.toString();
+    console.log("added in one variable");
+    return; 
+  }else if (eqkey) {
+    var answer = parseFloat(LHSele.value) % parseFloat(RHSele.value);
+    variables_list[eqkey] = answer.toString();
+    console.log("added in one variable");
+    return; 
+  } else {
+    console.log("invalid input");
+    return;
+  }
+
+}
+
+calculate( txtboxeqid, txtboxLHSid, txtboxRHSid){
+  const dropmenu = document.getElementById("dropdown" + this.name);
+  const selectedop = dropmenu.value;
+  console.log("---------started adding-------");
     const eqele = document.getElementById(txtboxeqid);
     const LHSele = document.getElementById(txtboxLHSid);
     const RHSele = document.getElementById(txtboxRHSid);
 
-    if (
-      !valid_string(txtboxRHSid) &&
-      !valid_number(txtboxRHSid) &&
-      !valid_string(txtboxLHSid) &&
-      !valid_number(txtboxLHSid)
-    ) {
-      return;
-    }
+    // if (
+    //   !valid_string(txtboxRHSid) &&
+    //   !valid_number(txtboxRHSid) &&
+    //   !valid_string(txtboxLHSid) &&
+    //   !valid_number(txtboxLHSid)
+    // ) {
+    //   return;
+    // }
 
     var lhskey = 0,
       rhskey = 0,
@@ -347,97 +526,46 @@ export class Addition extends BaseBlock {
     for (const key in variables_list) {
       if (`${key}` == eqele.value) {
         eqkey = key;
-      } else if (`${key}` == LHSele.value) {
+        console.log("eq key = "+ eqkey);
+      } 
+      if (`${key}` == LHSele.value) {
         lhskey = key;
-      } else if (`${key}` == RHSele.value) {
+        console.log("lhs key = "+ lhskey);
+      } 
+      if (`${key}` == RHSele.value) {
         rhskey = key;
-      }
-
-      if (lhskey && rhskey) {
-        var answer =
-          parseFloat(variables_list[lhskey]) +
-          parseFloat(variables_list[rhskey]);
-        variables_list[eqkey] = answer.toString();
-        console.log("-added using 3 variables");
-        return;
-      } else if (eqkey) {
-        var answer = parseFloat(LHSele.value) + parseFloat(RHSele.value);
-        variables_list[eqkey] = answer.toString();
-        console.log("added in one variable");
-        return;
-      } else {
-        console.log("invalid input");
-        return;
+        console.log("rhs key = "+ rhskey);
       }
     }
+
+  console.log("operatorno is = " + this.operatorno);
+  if(selectedop == "+"){
+    this.doadd(eqkey , lhskey , rhskey , LHSele , RHSele);
   }
+  else if(selectedop == "-"){
+    this.dosub(eqkey , lhskey , rhskey , LHSele , RHSele);
+  }
+  else if(selectedop == "*"){
+    this.domul(eqkey , lhskey , rhskey , LHSele , RHSele);
+  }
+  else if(selectedop == "/"){
+    this.dodiv(eqkey , lhskey , rhskey , LHSele , RHSele);
+  }
+  else if(selectedop == "%"){
+    this.domod(eqkey , lhskey , rhskey , LHSele , RHSele);
+  }
+
 }
-export class Comparison extends BinaryOp {
-  constructor() {
-    super();
-    console.log("comparison block initiated");
-  }
 
-  getBlockColor() {
-    return "orange";
-  }
-
-  getHeaderText() {
-    return "compare";
-  }
-
-  getSymbolElement() {
-    const dropdown = document.createElement("select");
-    dropdown.id = "dropdown" + this.name;
-
-    const option1 = document.createElement("option");
-    option1.value = "==";
-    option1.text = "==";
-    dropdown.appendChild(option1);
-
-    const option2 = document.createElement("option");
-    option2.value = "<";
-    option2.text = "<";
-    dropdown.appendChild(option2);
-
-    const option3 = document.createElement("option");
-    option3.value = ">";
-    option3.text = ">";
-    dropdown.appendChild(option3);
-
-    const option4 = document.createElement("option");
-    option4.value = "<=";
-    option4.text = "<=";
-    dropdown.appendChild(option4);
-
-    const option5 = document.createElement("option");
-    option5.value = ">=";
-    option5.text = ">=";
-    dropdown.appendChild(option5);
-
-    return dropdown;
-  }
-
-  create() {
-    var newBlock = super.create();
-    return newBlock;
-  }
-
-  compare(txtboxid_LHS, txtboxid_RHS) {
-    const dropdown = document.getElementById("dropdown" + this.name);
-    const selectedOption = dropdown.options[dropdown.selectedIndex];
-    const selectedValue = selectedOption.value;
-    const selectedText = selectedOption.text;
-
-    console.log("Selected value: " + selectedValue);
-    console.log("Selected text: " + selectedText);
-
-    // Rest of the compare method implementation
-  }
 }
+
+
+
 export function valid_variable_name(txtboxid) {
-  var txtbox = document.getElementById(txtboxid);
-  if(txtbox){
+  const txtbox = document.getElementById(txtboxid);
+  // if(!txtbox){
+  //   return false;
+  // }
   const var_name = txtbox.value;
   const variableNameRegex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
 
@@ -449,10 +577,34 @@ export function valid_variable_name(txtboxid) {
     return false;
   }
 }
+
+
+export function is_declared_variable(txtboxid) {
+  if (!valid_variable_name(txtboxid)) {
+    return false;
+  }
+
+  var txtbox = document.getElementById(txtboxid);
+
+  var flag = false;
+  for (const key in variables_list) {
+    if (`${key}` == txtbox.value) {
+      flag = true;
+      break;
+    }
+  }
+  if (flag == false) {
+    console.log("undefined variable on RHS");
+    return false;
+  }
+  return true;
 }
 
 export function valid_string(txtboxid) {
   var txtbox = document.getElementById(txtboxid);
+  // if(!txtbox){
+  //   return false;
+  // }
   const input_txt = txtbox.value;
   const stringPattern = /^"([^"\\]|\\.)*"$/;
 
@@ -467,6 +619,9 @@ export function valid_string(txtboxid) {
 
 export function valid_number(txtboxid) {
   var txtbox = document.getElementById(txtboxid);
+  // if(!txtbox){
+  //   return false;
+  // }
   const input_txt = txtbox.value;
   const numberPattern = /^-?\d+(\.\d+)?$/;
 
@@ -478,3 +633,35 @@ export function valid_number(txtboxid) {
     return false;
   }
 }
+
+export function get_value_from_txtbox_text(txtbox_txt) {
+
+  const stringPattern = /^"([^"\\]|\\.)*"$/;
+  const numberPattern = /^-?\d+(\.\d+)?$/;
+  if (stringPattern.test(txtbox_txt) || numberPattern.test(txtbox_txt)) {
+    return txtbox_txt;
+  }
+
+  else if(!variables_list[txtbox_txt]){
+    return variables_list[txtbox_txt]
+  }
+}
+
+export function same_dtype(LHS_value, RHS_value) {
+
+  const stringPattern = /^"([^"\\]|\\.)*"$/;
+  const numberPattern = /^-?\d+(\.\d+)?$/;
+
+  if(stringPattern.test(LHS_value) && stringPattern.test(RHS_value)){
+    return true;
+  }
+  else if(numberPattern.test(LHS_value) && numberPattern.test(RHS_value)){
+    return true;
+  }
+  else{
+    return false;
+  }
+
+
+}
+
