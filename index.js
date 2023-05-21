@@ -149,7 +149,13 @@ function Runprog() {
     }
 
     else if(ele instanceof Comparison){
-      ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
+      if(ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name) == true){
+        console.log("comparison result : true");
+      }
+      else if(ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name) == false){
+        console.log("comparison result : false");
+
+      }
 
     }
 

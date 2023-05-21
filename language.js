@@ -243,7 +243,7 @@ export class Assignment extends BinaryOp {
 
     else if (valid_variable_name(txtboxid_RHS)) {
 
-      if(! is_declared_variable(txtboxid_RHS)){
+      if (!is_declared_variable(txtboxid_RHS)) {
         console.log("undefined variable on RHS");
         return;
       }
@@ -251,7 +251,7 @@ export class Assignment extends BinaryOp {
       console.log("value is assigned");
       return;
     }
-    else{
+    else {
       console.log("undefined symbol in RHS");
     }
     return;
@@ -320,25 +320,100 @@ export class Comparison extends BinaryOp {
     const selectedText = selectedOption.text;
 
     console.log("Selected value: " + selectedValue);
-    console.log("Selected text: " + selectedText);
 
     const LHS_txt = document.getElementById(txtboxid_LHS);
     const RHS_txt = document.getElementById(txtboxid_RHS);
     console.log("LHS = " + LHS_txt.value);
     console.log("RHS = " + RHS_txt.value);
+    console.log("LHS id= " + txtboxid_LHS);
+    console.log("RHS id= " + txtboxid_RHS);
 
-    if(same_dtype(txtboxid_LHS, txtboxid_RHS)){
-      console.log("same d type");
+    //fetch LHS value in variable LHS_value
+
+    const LHS_value = get_value_from_txtbox_text(LHS_txt.value);
+
+    //fetch RHS value in variable RHS_value
+
+    const RHS_value = get_value_from_txtbox_text(RHS_txt.value);
+
+    //compare datatypes. exit program if datatypes are different.
+    if(!same_dtype(LHS_value, RHS_value)){
+      console.log("non matching dtypes");
+      return false;
     }
-    else{
-      console.log("non matching dtype");
+
+    //perform comparison according to selected operator
+    const stringPattern = /^"([^"\\]|\\.)*"$/;
+    const numberPattern = /^-?\d+(\.\d+)?$/;
+
+    if(selectedValue == "=="){
+      if(LHS_value == RHS_value){
+        return true;
+      }
     }
+
+    else if(selectedValue == ">"){
+      if(stringPattern.test(LHS_value)){
+        if(LHS_value.localeCompare(RHS_value) > 0){
+          return true;
+        }
+      }
+      else if(numberPattern.test(RHS_value)){
+        if(Number(LHS_value) > Number(RHS_value)){
+          return true;
+        }
+      }
+    }
+
+    else if(selectedValue == "<"){
+      if(stringPattern.test(LHS_value)){
+        if(LHS_value.localeCompare(RHS_value) < 0){
+          return true;
+        }
+      }
+      else if(numberPattern.test(RHS_value)){
+        if(Number(LHS_value) < Number(RHS_value)){
+          return true;
+        }
+      } 
+    }
+
+    else if(selectedValue == ">="){
+      if(stringPattern.test(LHS_value)){
+        if(LHS_value.localeCompare(RHS_value) >= 0){
+          return true;
+        }
+      }
+      else if(numberPattern.test(RHS_value)){
+        if(Number(LHS_value) >= Number(RHS_value)){
+          return true;
+        }
+      }
+    }
+
+    else if(selectedValue == "<="){
+      if(stringPattern.test(LHS_value)){
+        if(LHS_value.localeCompare(RHS_value) <= 0){
+          return true;
+        }
+      }
+      else if(numberPattern.test(RHS_value)){
+        if(Number(LHS_value) <= Number(RHS_value)){
+          return true;
+        }
+      }
+    }
+    return false;
+
 
   }
 
 }
 export function valid_variable_name(txtboxid) {
-  var txtbox = document.getElementById(txtboxid);
+  const txtbox = document.getElementById(txtboxid);
+  // if(!txtbox){
+  //   return false;
+  // }
   const var_name = txtbox.value;
   const variableNameRegex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
 
@@ -374,6 +449,9 @@ export function is_declared_variable(txtboxid) {
 
 export function valid_string(txtboxid) {
   var txtbox = document.getElementById(txtboxid);
+  // if(!txtbox){
+  //   return false;
+  // }
   const input_txt = txtbox.value;
   const stringPattern = /^"([^"\\]|\\.)*"$/;
 
@@ -389,6 +467,9 @@ export function valid_string(txtboxid) {
 export function valid_number(txtboxid) {
 
   var txtbox = document.getElementById(txtboxid);
+  // if(!txtbox){
+  //   return false;
+  // }
   const input_txt = txtbox.value;
   const numberPattern = /^-?\d+(\.\d+)?$/;
 
@@ -402,38 +483,34 @@ export function valid_number(txtboxid) {
   }
 }
 
-export function same_dtype(txtboxid_LHS, txtboxid_RHS){
-  const LHS_txt = document.getElementById(txtboxid_LHS);
-  const RHS_txt = document.getElementById(txtboxid_RHS);
-  if((valid_string(txtboxid_LHS) && valid_string(txtboxid_RHS)) || (valid_number(txtboxid_LHS) && valid_number(txtboxid_RHS))){
-    return true;
+export function get_value_from_txtbox_text(txtbox_txt) {
+
+  const stringPattern = /^"([^"\\]|\\.)*"$/;
+  const numberPattern = /^-?\d+(\.\d+)?$/;
+  if (stringPattern.test(txtbox_txt) || numberPattern.test(txtbox_txt)) {
+    return txtbox_txt;
   }
 
-  else if(valid_variable_name(txtboxid_LHS) && valid_variable_name(txtboxid_RHS)){
-    if(is_declared_variable(txtboxid_LHS) && is_declared_variable(txtboxid_RHS)){
-      var LHS_value = variables_list[LHS_txt.value];
-      var RHS_value = variables_list[RHS_txt.value];
+  else if(!variables_list[txtbox_txt]){
+    return variables_list[txtbox_txt]
+  }
+}
 
-      const stringPattern = /^"([^"\\]|\\.)*"$/;
-      const numberPattern = /^-?\d+(\.\d+)?$/;
-      if (stringPattern.test(LHS_value) && stringPattern.test(RHS_value)) {
-        return true;
-      }
+export function same_dtype(LHS_value, RHS_value) {
 
-      else if (numberPattern.test(LHS_value) && numberPattern.test(RHS_value)) {
-        return true;
-      }
-      else{
-        return false;
-      }
+  const stringPattern = /^"([^"\\]|\\.)*"$/;
+  const numberPattern = /^-?\d+(\.\d+)?$/;
 
-    }
-    else{
-      return false;
-    }
+  if(stringPattern.test(LHS_value) && stringPattern.test(RHS_value)){
+    return true;
+  }
+  else if(numberPattern.test(LHS_value) && numberPattern.test(RHS_value)){
+    return true;
   }
   else{
     return false;
   }
+
+
 }
 
