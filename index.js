@@ -100,7 +100,7 @@ function CreateBlock(block_type) {
     parent.appendChild(newblock);
     orderofelmnts.push(artblck);
   }
-  else if(block_type == "compareblock"){
+  else if (block_type == "compareblock") {
     var cmpblck = new Comparison();
     var newblock = cmpblck.create();
     var parent = document.getElementById("Menu");
@@ -179,13 +179,14 @@ function Runprog() {
         console.log("comparison result : false");
 
 
+      }
     }
-  }
 
-  console.log("printing variable list for verification");
-  for (const key in variables_list) {
-    console.log(`Key: ${key}, Value: ${variables_list[key]}`);
-  }
+    console.log("printing variable list for verification");
+    for (const key in variables_list) {
+      console.log(`Key: ${key}, Value: ${variables_list[key]}`);
+    }
 
-  // prln.display();
+    // prln.display();
+  }
 }
