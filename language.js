@@ -317,97 +317,13 @@ export class Comparison extends BinaryOp {
     const dropdown = document.getElementById("dropdown" + this.name);
     const selectedOption = dropdown.options[dropdown.selectedIndex];
     const selectedValue = selectedOption.value;
-    const selectedText = selectedOption.text;
+    // const selectedText = selectedOption.text;
 
     console.log("Selected value: " + selectedValue);
 
     const LHS_txt = document.getElementById(txtboxid_LHS);
     const RHS_txt = document.getElementById(txtboxid_RHS);
-    console.log("LHS = " + LHS_txt.value);
-    console.log("RHS = " + RHS_txt.value);
-    console.log("LHS id= " + txtboxid_LHS);
-    console.log("RHS id= " + txtboxid_RHS);
-
-    //fetch LHS value in variable LHS_value
-
-    const LHS_value = get_value_from_txtbox_text(LHS_txt.value);
-
-    //fetch RHS value in variable RHS_value
-
-    const RHS_value = get_value_from_txtbox_text(RHS_txt.value);
-
-    //compare datatypes. exit program if datatypes are different.
-    if(!same_dtype(LHS_value, RHS_value)){
-      console.log("non matching dtypes");
-      return false;
-    }
-
-    //perform comparison according to selected operator
-    const stringPattern = /^"([^"\\]|\\.)*"$/;
-    const numberPattern = /^-?\d+(\.\d+)?$/;
-
-    if(selectedValue == "=="){
-      if(LHS_value == RHS_value){
-        return true;
-      }
-    }
-
-    else if(selectedValue == ">"){
-      if(stringPattern.test(LHS_value)){
-        if(LHS_value.localeCompare(RHS_value) > 0){
-          return true;
-        }
-      }
-      else if(numberPattern.test(RHS_value)){
-        if(Number(LHS_value) > Number(RHS_value)){
-          return true;
-        }
-      }
-    }
-
-    else if(selectedValue == "<"){
-      if(stringPattern.test(LHS_value)){
-        if(LHS_value.localeCompare(RHS_value) < 0){
-          return true;
-        }
-      }
-      else if(numberPattern.test(RHS_value)){
-        if(Number(LHS_value) < Number(RHS_value)){
-          return true;
-        }
-      } 
-    }
-
-    else if(selectedValue == ">="){
-      if(stringPattern.test(LHS_value)){
-        if(LHS_value.localeCompare(RHS_value) >= 0){
-          return true;
-        }
-      }
-      else if(numberPattern.test(RHS_value)){
-        if(Number(LHS_value) >= Number(RHS_value)){
-          return true;
-        }
-      }
-    }
-
-    else if(selectedValue == "<="){
-      if(stringPattern.test(LHS_value)){
-        if(LHS_value.localeCompare(RHS_value) <= 0){
-          return true;
-        }
-      }
-      else if(numberPattern.test(RHS_value)){
-        if(Number(LHS_value) <= Number(RHS_value)){
-          return true;
-        }
-      }
-    }
-    return false;
-
-
   }
-
 }
 export function valid_variable_name(txtboxid) {
   const txtbox = document.getElementById(txtboxid);
@@ -483,34 +399,5 @@ export function valid_number(txtboxid) {
   }
 }
 
-export function get_value_from_txtbox_text(txtbox_txt) {
 
-  const stringPattern = /^"([^"\\]|\\.)*"$/;
-  const numberPattern = /^-?\d+(\.\d+)?$/;
-  if (stringPattern.test(txtbox_txt) || numberPattern.test(txtbox_txt)) {
-    return txtbox_txt;
-  }
-
-  else if(!variables_list[txtbox_txt]){
-    return variables_list[txtbox_txt]
-  }
-}
-
-export function same_dtype(LHS_value, RHS_value) {
-
-  const stringPattern = /^"([^"\\]|\\.)*"$/;
-  const numberPattern = /^-?\d+(\.\d+)?$/;
-
-  if(stringPattern.test(LHS_value) && stringPattern.test(RHS_value)){
-    return true;
-  }
-  else if(numberPattern.test(LHS_value) && numberPattern.test(RHS_value)){
-    return true;
-  }
-  else{
-    return false;
-  }
-
-
-}
 

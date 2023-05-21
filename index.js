@@ -1,4 +1,4 @@
-import { Printstmt, Variable, Assignment, Comparison, valid_variable_name} from "./language.js";
+import { Printstmt, Variable, Assignment, Comparison, valid_variable_name } from "./language.js";
 const myButton = document.getElementById("run");
 myButton.addEventListener("click", function () { Runprog() });
 
@@ -121,41 +121,37 @@ function Runprog() {
     const ele = orderofexec[i];
     console.log("running = " + ele.name);
     if (ele instanceof Printstmt) {
-      ele.display("txt-box" + ele.name , variables_list);
+      ele.display("txt-box" + ele.name, variables_list);
     }
 
     else if (ele instanceof Variable) {
-      if(valid_variable_name("vartxt-box" + ele.name)){
+      if (valid_variable_name("vartxt-box" + ele.name)) {
         const var_txtbox = document.getElementById("vartxt-box" + ele.name);
         var unique_flag = true;
-        for(const key in variables_list){
+        for (const key in variables_list) {
           if (`${key}` == var_txtbox.value) {
             console.log("redeclaration is not allowd");
             unique_flag = false;
             break;
           }
         }
-        if(unique_flag == true){
+        if (unique_flag == true) {
           variables_list[var_txtbox.value] = 0;
         }
 
       }
- 
+
     }
 
-    else if(ele instanceof Assignment){
+    else if (ele instanceof Assignment) {
       ele.assign("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
 
     }
 
-    else if(ele instanceof Comparison){
-      if(ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name) == true){
-        console.log("comparison result : true");
-      }
-      else if(ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name) == false){
-        console.log("comparison result : false");
+    else if (ele instanceof Comparison) {
+      ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
 
-      }
+
 
     }
 
