@@ -4,7 +4,9 @@ import {
   Assignment,
   valid_variable_name,
   Arithmatic,
+  Comparison,
 } from "./language.js";
+
 const myButton = document.getElementById("run");
 myButton.addEventListener("click", function () {
   Runprog();
@@ -30,7 +32,9 @@ myButton4.addEventListener("click", function () {
   CreateBlock("arithmaticblock");
 });
 const myButton5 = document.getElementById("compare");
-myButton5.addEventListener("click", function () { CreateBlock("compareblock") });
+myButton5.addEventListener("click", function () {
+  CreateBlock("compareblock");
+});
 
 var orderofelmnts = [];
 export let variables_list = new Object();
@@ -62,23 +66,23 @@ function reorder(elmntarr, orderofexec) {
   let j = 0;
   let i = 0;
   for (i = 0; i < orderofexec.length; i++) {
-    enterflag =1;
+    enterflag = 1;
     for (j = 0; j < elmntarr.length; j++) {
       if (elmntarr[j].name == orderofexec[i]) {
-        delflag = 1
+        delflag = 1;
         var temp = elmntarr[i];
         elmntarr[i] = elmntarr[j];
         elmntarr[j] = temp;
       }
     }
-    if(delflag == 0){
-      elmntarr.splice(j , 1);
+    if (delflag == 0) {
+      elmntarr.splice(j, 1);
+    } else {
+      delflag = 0;
     }
-    else{
-    delflag = 0;}
   }
-  if(i-1 < elmntarr.length){
-    elmntarr.splice(i , (elmntarr.length - orderofexec.length));
+  if (i - 1 < elmntarr.length) {
+    elmntarr.splice(i, elmntarr.length - orderofexec.length);
   }
   return elmntarr;
 }
@@ -104,15 +108,19 @@ function CreateBlock(block_type) {
     var parent = document.getElementById("Menu");
     parent.appendChild(newblock);
     orderofelmnts.push(assblck);
+  } else if (block_type == "arithmaticblock") {
+    var artblck = new Arithmatic();
+    var newblock = artblck.create();
+    var parent = document.getElementById("Menu");
+    parent.appendChild(newblock);
+    orderofelmnts.push(artblck);
+  } else if (block_type == "compareblock") {
+    var cmpblck = new Comparison();
+    var newblock = cmpblck.create();
+    var parent = document.getElementById("Menu");
+    parent.appendChild(newblock);
+    orderofelmnts.push(cmpblck);
   }
- else if (block_type == "arithmaticblock") {
-  var artblck = new Arithmatic();
-  var newblock = artblck.create();
-  var parent = document.getElementById("Menu");
-  parent.appendChild(newblock);
-  orderofelmnts.push(artblck);
-}
-
 
   // var parent = document.getElementById("Menu");
   // parent.appendChild(newblock);
@@ -120,7 +128,7 @@ function CreateBlock(block_type) {
 
 function getElementsinOrder() {
   const parentElement = document.getElementById("Canvas"); // Replace 'parent' with the ID of the parent element
-  let elmntarr = new Array;
+  let elmntarr = new Array();
   // Get all the children of the parent element
   const children = parentElement.childNodes;
   console.log("length of canvas children = " + children.length);
@@ -149,6 +157,7 @@ function Runprog() {
   for (let i = 0; i < orderofexec.length; i++) {
     const ele = orderofexec[i];
     console.log("running = " + ele.name);
+
     if (ele.name && ele instanceof Printstmt) {
       ele.display("txt-box" + ele.name, variables_list);
     } else if (ele.name && ele instanceof Variable) {
@@ -157,7 +166,7 @@ function Runprog() {
         var unique_flag = true;
         for (const key in variables_list) {
           if (`${key}` == var_txtbox.value) {
-            console.log("redeclaration is not allowd");
+            console.log("redeclaration is not allowed");
             unique_flag = false;
             break;
           }
@@ -166,7 +175,7 @@ function Runprog() {
           variables_list[var_txtbox.value] = 0;
         }
       }
-    } else if (ele instanceof Assignment) {
+    } else if (ele.name && ele instanceof Assignment) {
       ele.assign("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
     } else if (ele instanceof Arithmatic) {
       console.log("----reached here------" + ele.name);
@@ -176,31 +185,27 @@ function Runprog() {
         "txt-box-add" + ele.name
       );
     } else if (ele instanceof Comparison) {
-      ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
-
-    }
-
-    else if(ele instanceof Comparison){
-      if(ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name) == true){
+      if (
+        ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name) == true
+      ) {
         console.log("comparison result : true");
-      }
-      else if(ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name) == false){
+      } else if (
+        ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name) == false
+      ) {
         console.log("comparison result : false");
-
       }
-
     }
-  }
 
-  console.log("printing variable list for verification");
-  for (const key in variables_list) {
-    console.log(`Key: ${key}, Value: ${variables_list[key]}`);
-  }
-
-  for (var prop in variables_list) {
-    if (variables_list.hasOwnProperty(prop)) {
-      delete variables_list[prop];
+    console.log("printing variable list for verification");
+    for (const key in variables_list) {
+      console.log(`Key: ${key}, Value: ${variables_list[key]}`);
     }
+
+    for (var prop in variables_list) {
+      if (variables_list.hasOwnProperty(prop)) {
+        delete variables_list[prop];
+      }
+    }
+    // prln.display();
   }
-  // prln.display();
 }
