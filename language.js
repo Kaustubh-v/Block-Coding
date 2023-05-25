@@ -560,7 +560,16 @@ calculate( txtboxeqid, txtboxLHSid, txtboxRHSid){
 
 }
 
+export class IFstatement extends BaseBlock{
+  constructor() {
+    super();
+    console.log("addition block initiated");
+  }
 
+  create(){
+    
+  }
+}
 
 export function valid_variable_name(txtboxid) {
   const txtbox = document.getElementById(txtboxid);

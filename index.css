@@ -63,3 +63,26 @@
     justify-content: center;
 }
 
+.button {
+    display: inline-block;
+    padding: 5px 5px;
+    font-size: 10px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #8a91db;
+    border: none;
+    border-radius:3px;
+    box-shadow: 0 5px #999;
+    margin: 5px;
+  }
+
+  .button:hover {background-color: #6268a8}
+
+.button:active {
+  background-color: #6268a8;
+  box-shadow: 0 1px #666;
+  transform: translateY(4px);
+}

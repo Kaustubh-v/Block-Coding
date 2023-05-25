@@ -1,4 +1,4 @@
-import { variables_list } from "./index.js";
+
 
 function allowDrop(ev) {
     ev.preventDefault();
@@ -31,7 +31,8 @@ function allowDrop(ev) {
       droppedonelement.insertAdjacentElement('beforeend' , draggedelement);
     }
     else if(droppedonelementid == "Delete"){
-      var draggedelement_txtbox = document.getElementById("Var") ; 
+      // var draggedelement_txtbox = document.getElementById("vartxt-box"+) ; 
+      console.log("deleted element = " + draggedelement.id);
       draggedelement.remove();
     }
     else{

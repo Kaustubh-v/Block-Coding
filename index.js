@@ -57,14 +57,28 @@ export let variables_list = new Object();
 // });
 
 function reorder(elmntarr, orderofexec) {
-  for (let i = 0; i < orderofexec.length; i++) {
-    for (let j = 0; j < elmntarr.length; j++) {
+  let delflag = 0;
+  let enterflag = 0;
+  let j = 0;
+  let i = 0;
+  for (i = 0; i < orderofexec.length; i++) {
+    enterflag =1;
+    for (j = 0; j < elmntarr.length; j++) {
       if (elmntarr[j].name == orderofexec[i]) {
+        delflag = 1
         var temp = elmntarr[i];
         elmntarr[i] = elmntarr[j];
         elmntarr[j] = temp;
       }
     }
+    if(delflag == 0){
+      elmntarr.splice(j , 1);
+    }
+    else{
+    delflag = 0;}
+  }
+  if(i-1 < elmntarr.length){
+    elmntarr.splice(i , (elmntarr.length - orderofexec.length));
   }
   return elmntarr;
 }
@@ -106,16 +120,17 @@ function CreateBlock(block_type) {
 
 function getElementsinOrder() {
   const parentElement = document.getElementById("Canvas"); // Replace 'parent' with the ID of the parent element
-  var elmntarr = [];
+  let elmntarr = new Array;
   // Get all the children of the parent element
   const children = parentElement.childNodes;
-
+  console.log("length of canvas children = " + children.length);
   // Loop through the children
   for (let i = 0; i < children.length; i++) {
     const child = children[i];
     // Filter out non-element nodes (such as text nodes)
     if (child.nodeType === Node.ELEMENT_NODE) {
       // Perform actions with each child element
+      console.log("children of canvas  = " + child.id);
       elmntarr.push(child.id);
     }
   }
@@ -127,8 +142,10 @@ function Runprog() {
   terminal.textContent = "";
   variables_list = {};
 
-  const orderofplacement = getElementsinOrder();
-  const orderofexec = reorder(orderofelmnts, orderofplacement);
+  let orderofplacement = getElementsinOrder();
+  console.log("length of orderofplacement = " + orderofplacement.length);
+  let orderofexec = reorder(orderofelmnts, orderofplacement);
+  console.log("length of orderofexec = " + orderofexec.length);
   for (let i = 0; i < orderofexec.length; i++) {
     const ele = orderofexec[i];
     console.log("running = " + ele.name);
@@ -180,5 +197,10 @@ function Runprog() {
     console.log(`Key: ${key}, Value: ${variables_list[key]}`);
   }
 
+  for (var prop in variables_list) {
+    if (variables_list.hasOwnProperty(prop)) {
+      delete variables_list[prop];
+    }
+  }
   // prln.display();
 }
