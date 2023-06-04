@@ -5,11 +5,16 @@ import {
   valid_variable_name,
   Arithmatic,
   Comparison,
+  IFstatement,
+  ELSEstatement
 } from "./language.js";
+
+var orderofelmnts = []; // contains the instance of each block created
+export let variables_list = new Object();
 
 const myButton = document.getElementById("run");
 myButton.addEventListener("click", function () {
-  Runprog();
+  Runprog("Canvas", orderofelmnts);
 });
 
 const myButton1 = document.getElementById("print");
@@ -36,36 +41,23 @@ myButton5.addEventListener("click", function () {
   CreateBlock("compareblock");
 });
 
-var orderofelmnts = [];
-export let variables_list = new Object();
-
-// const canvas = document.getElementById("Canvas");
-// canvas.addEventListener("mousedown" , function(event){
-//     const block =  event.target.closest(".Blockheader");
-//     console.log("im here");
-//     if(block){
-//       dragElement(block);
-//       console.log("function called here");
-//     }
-// });
-// var canvas = document.getElementById("Canvas");
-// canvas.addEventListener("mouseover" , function(event){
-//   console.log("first here");
-//   var blocks = document.querySelectorAll('.Block');
-//   blocks.forEach(function(block) {
-//     console.log("im here");
-//     block.addEventListener('mouseover', function() {
-//       dragElement(block);
-//   });
-// })
-// });
+const myButton6 = document.getElementById("ifstatement");
+myButton6.addEventListener("click", function () {
+  CreateBlock("ifblock");
+});
+const myButton7 = document.getElementById("elsestatement");
+myButton7.addEventListener("click", function () {
+  CreateBlock("elseblock");
+});
 
 function reorder(elmntarr, orderofexec) {
   let delflag = 0;
   let enterflag = 0;
   let j = 0;
   let i = 0;
+  // console.log("elementarr contains : "+ elmntarr.length + " 0 : " + elmntarr[0].name + " 1 : " + elmntarr[1].name);
   for (i = 0; i < orderofexec.length; i++) {
+    console.log("orderofexec contains : " + elmntarr[0].id);
     enterflag = 1;
     for (j = 0; j < elmntarr.length; j++) {
       if (elmntarr[j].name == orderofexec[i]) {
@@ -73,17 +65,21 @@ function reorder(elmntarr, orderofexec) {
         var temp = elmntarr[i];
         elmntarr[i] = elmntarr[j];
         elmntarr[j] = temp;
+        console.log("elmntarr contains : " + elmntarr[i]);
       }
     }
     if (delflag == 0) {
       elmntarr.splice(j, 1);
     } else {
+      console.log("----reached in delfag 0-----");
       delflag = 0;
     }
   }
-  if (i - 1 < elmntarr.length) {
+  if (i < elmntarr.length) {
+    console.log("-----reached i-1 -------");
     elmntarr.splice(i, elmntarr.length - orderofexec.length);
   }
+
   return elmntarr;
 }
 
@@ -120,14 +116,26 @@ function CreateBlock(block_type) {
     var parent = document.getElementById("Menu");
     parent.appendChild(newblock);
     orderofelmnts.push(cmpblck);
+  } else if (block_type == "ifblock") {
+    var ifblck = new IFstatement();
+    var newblock = ifblck.create();
+    var parent = document.getElementById("Menu");
+    parent.appendChild(newblock);
+    orderofelmnts.push(ifblck);
+  }else if (block_type == "elseblock") {
+    var elseblck = new ELSEstatement();
+    var newblock = elseblck.create();
+    var parent = document.getElementById("Menu");
+    parent.appendChild(newblock);
+    orderofelmnts.push(elseblck);
   }
 
   // var parent = document.getElementById("Menu");
   // parent.appendChild(newblock);
 }
 
-function getElementsinOrder() {
-  const parentElement = document.getElementById("Canvas"); // Replace 'parent' with the ID of the parent element
+function getElementsinOrder(Canvasid) {
+  const parentElement = document.getElementById(Canvasid); // Replace 'parent' with the ID of the parent element
   let elmntarr = new Array();
   // Get all the children of the parent element
   const children = parentElement.childNodes;
@@ -145,25 +153,29 @@ function getElementsinOrder() {
   return elmntarr;
 }
 
-function Runprog() {
+export function Runprog(Canvasid) {
+  console.log("runnig canvas : " + Canvasid);
+  console.log("runnig canvas children : " + orderofelmnts[0].id);
   const terminal = document.getElementById("Terminal");
   terminal.textContent = "";
   variables_list = {};
-
-  let orderofplacement = getElementsinOrder();
+  let orderofplacement = getElementsinOrder(Canvasid); // these contain the id of the elements
   console.log("length of orderofplacement = " + orderofplacement.length);
-  let orderofexec = reorder(orderofelmnts, orderofplacement);
+  let elmntarr = orderofelmnts.concat();
+  let orderofexec = reorder(elmntarr, orderofplacement);
   console.log("length of orderofexec = " + orderofexec.length);
   for (let i = 0; i < orderofexec.length; i++) {
     const ele = orderofexec[i];
     console.log("running = " + ele.name);
 
     if (ele.name && ele instanceof Printstmt) {
+      console.log("print block is being executed");
       ele.display("txt-box" + ele.name, variables_list);
     } else if (ele.name && ele instanceof Variable) {
       if (valid_variable_name("vartxt-box" + ele.name)) {
         const var_txtbox = document.getElementById("vartxt-box" + ele.name);
-        var unique_flag = true;
+        let unique_flag = true;
+        console.log("--------------------" + unique_flag);
         for (const key in variables_list) {
           if (`${key}` == var_txtbox.value) {
             console.log("redeclaration is not allowed");
@@ -172,6 +184,7 @@ function Runprog() {
           }
         }
         if (unique_flag == true) {
+          console.log("-----reached in storing var-----");
           variables_list[var_txtbox.value] = 0;
         }
       }
@@ -185,6 +198,7 @@ function Runprog() {
         "txt-box-add" + ele.name
       );
     } else if (ele instanceof Comparison) {
+      console.log("comparision ele is : " + ele.name);
       if (
         ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name) == true
       ) {
@@ -194,6 +208,33 @@ function Runprog() {
       ) {
         console.log("comparison result : false");
       }
+    } else if (ele.name && ele instanceof IFstatement) {
+      console.log("----------running if----------");
+      let number = ele.name[ele.name.length - 1];
+      let IFflag = 0;
+      let Comparisionid = ele.getComparisionid("Logicblock" + number);
+      let comparisionelmnt;
+      for(let i = 0 ; i < orderofelmnts.length ; i++){
+        if(orderofelmnts[i].name == Comparisionid){
+          comparisionelmnt = orderofelmnts[i];
+        }
+      }
+      if (
+        comparisionelmnt.compare(
+          "txt-box-LHS" + comparisionelmnt.name,
+          "txt-box-RHS" + comparisionelmnt.name
+        )
+      ) {
+        IFflag = 1;
+        i+=1
+        ele.Runcanvas("Canvasblock" + number);
+      } else if(IFflag == 0) {
+        let elseElement = orderofexec[i+1];
+        i+=1;
+        number = elseElement.name[elseElement.name.length -1];
+        elseElement.Runcanvas("Canvasblock" + number);
+        console.log("condition is flase!!");
+      }
     }
 
     console.log("printing variable list for verification");
@@ -201,11 +242,11 @@ function Runprog() {
       console.log(`Key: ${key}, Value: ${variables_list[key]}`);
     }
 
-    for (var prop in variables_list) {
-      if (variables_list.hasOwnProperty(prop)) {
-        delete variables_list[prop];
-      }
-    }
     // prln.display();
+  }
+  for (var prop in variables_list) {
+    if (variables_list.hasOwnProperty(prop)) {
+      delete variables_list[prop];
+    }
   }
 }

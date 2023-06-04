@@ -1,4 +1,4 @@
-import { variables_list } from "./index.js";
+import { variables_list  , Runprog} from "./index.js";
 
 export class BaseBlock {
   static instanceCount = 0;
@@ -26,8 +26,8 @@ export class BaseBlock {
     header.id = "Blockheader" + BaseBlock.instanceCount;
     header.textContent = this.getHeaderText();
     newBlock.appendChild(header);
-
     newBlock.addEventListener("dragstart", drag);
+
     return newBlock;
   }
 
@@ -530,7 +530,6 @@ export class Comparison extends BinaryOp {
 
 }
 
-
 export class Arithmatic extends BaseBlock {
   static operatorno = 0;
   constructor() {
@@ -835,11 +834,90 @@ export class Arithmatic extends BaseBlock {
 export class IFstatement extends BaseBlock{
   constructor() {
     super();
-    console.log("addition block initiated");
+    console.log("IF block initiated");
+  }
+
+  getBlockColor() {
+    return "turquoise";
+  }
+
+  getHeaderText() {
+    return "IF";
   }
 
   create(){
-    
+    var newblock = super.create();
+    var logicarea = document.createElement("div");
+    logicarea.id = "Logic" + this.name;
+    logicarea.style.backgroundColor = this.getBlockColor();
+    logicarea.style.border = "solid";
+    logicarea.style.borderWidth = "3px";
+    logicarea.style.margin = "5px";
+    logicarea.style.padding = "10px";
+    var addarea = document.createElement("div");
+    addarea.id = "Canvas" + this.name;
+    addarea.style.backgroundColor = this.getBlockColor();
+    addarea.style.border = "solid";
+    addarea.style.borderWidth = "3px";
+    addarea.style.margin = "5px";
+    addarea.style.padding = "25px";
+    newblock.appendChild(logicarea);
+    newblock.appendChild(addarea);
+
+
+    return newblock;
+  }
+
+  getComparisionid(Logicid){
+    let Value = document.getElementById(Logicid);
+    let ele = Value.children;
+    console.log("comparision block id is : " + ele[0].id)
+    return ele[0].id;
+  }
+
+  Runcanvas(Canvasid){
+    let Value = document.getElementById(Canvasid);
+    let orederofelmnts = Value.children;
+    console.log("orderofelmnts in canvasBlock = "+ orederofelmnts[0].id);
+    orederofelmnts = Array.from(orederofelmnts);
+    Runprog(Canvasid, orederofelmnts);
+    return;
+  }
+}
+
+export class ELSEstatement extends BaseBlock{
+  constructor() {
+    super();
+    console.log("ELSE block initiated");
+  }
+
+  getBlockColor() {
+    return "turquoise";
+  }
+
+  getHeaderText() {
+    return "ELSE";
+  }
+
+  create(){
+    var newblock = super.create();
+    var addarea = document.createElement("div");
+    addarea.id = "Canvas" + this.name;
+    addarea.style.backgroundColor = this.getBlockColor();
+    addarea.style.border = "solid";
+    addarea.style.borderWidth = "3px";
+    addarea.style.margin = "5px";
+    addarea.style.padding = "25px";
+    newblock.appendChild(addarea);
+    return newblock;
+  }
+  Runcanvas(Canvasid){
+    let Value = document.getElementById(Canvasid);
+    let orederofelmnts = Value.children;
+    console.log("orderofelmnts in canvasBlock = "+ orederofelmnts[0].id);
+    orederofelmnts = Array.from(orederofelmnts);
+    Runprog(Canvasid, orederofelmnts);
+    return;
   }
 }
 
@@ -859,7 +937,6 @@ export function valid_variable_name(txtboxid) {
     return false;
   }
 }
-
 
 export function is_declared_variable(txtboxid) {
   if (!valid_variable_name(txtboxid)) {
@@ -915,6 +992,3 @@ export function valid_number(txtboxid) {
     return false;
   }
 }
-
-
-
