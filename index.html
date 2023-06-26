@@ -4,13 +4,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" href="index.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono&display=swap">
+
     <title>First javaScript prog</title>
   </head>
   <body>
     <div class="row">
       <div class="column" id = "Menu">
         <div class="RunButton">
-          <button class = "button" id="run">Run</button>
+          <button class = "button" id="run">RUN</button>
         </div>
         <div class="languageButtons" id="printButton">
           <button class = "button" id="print">PRINT</button><br>
@@ -22,16 +24,12 @@
           <button class = "button" id="elsestatement"> ELSE statement </button><br>
         </div>
       </div>
-      <div class="column" id="Canvas"  ondrop = "drop(event)" ondragover = "allowDrop(event)" >
-      </div>
+      <div class="column" id="Canvas"  ondrop = "drop(event)" ondragover = "allowDrop(event)" ></div>
       <div class="column" id = "terminalcolumn">
-       <h2>Terminal</h2> 
-       <div id = "Terminal"></div>
+        <h2>OUTPUT</h2> 
+        <div id = "Terminal"></div>
       </div>
-    </div>
-    <div class = "row">
-      <div class = "column" id = "Delete" ondrop = "drop(event)" ondragover = "allowDrop(event)">
-      </div>
+      <div class = "columnspan" id = "Delete" ondrop = "drop(event)" ondragover = "allowDrop(event)"></div>
     </div>
     <script type="module" src="language.js"></script>
     <script type="module" src="index.js"></script>

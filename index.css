@@ -2,11 +2,20 @@
     float: left;
     width: 50.5%;
     border: solid;
-    border-width: 1px;
+    border-width: 2px;
+    border-color: black;
     margin : 3px;
     height: 500px;
-  }
-  
+}
+
+h2{
+    font-family: 'IBM Plex Mono' , monospace;
+    color: #41833d;
+}
+.row{
+    display : flex;
+    align-items: flex-start;
+}
 .row:after {
     content: "";
     display: table;
@@ -15,11 +24,14 @@
 
 #Menu{
     width: 150px;
+    position: fixed;
+    z-index: 100;
 }
 
 #Canvas{
-    background-color: cadetblue;
+    background-color: #d4fafc;
     height: 1500px;
+    margin-left: 160px;
 }
 
 
@@ -28,7 +40,13 @@
     padding : 5px;
     display:block;
     align-items:center;
-    width: 750px;
+    width: 740px;
+}
+
+.Block:hover{
+    box-shadow: 0 0 10px rgba(0,0, 0, 0.5);
+    z-index :10;
+    padding : 10px;
 }
 
 #Blockheader{
@@ -40,33 +58,33 @@
 }
 
 .RunButton{
-
     margin : 5px;
 }
 
-.languageButtons{
-    color: blanchedalmond;
-    padding: 5px;
-}
 
 #terminalcolumn{
     text-align: center;
-    width: 300px;
+    width: 30%;
     height: 500px;
+    position: fixed;
+    z-index: 100;
+    margin-left: 62%;
 }
 
 #Delete{
     height : 100px;
-    margin : 10px 33.3% 10px 33.3%; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width : 469px;
+    margin : 520px 10.3% 10px 61.7%; 
+    z-index: 100;
+    margin-bottom: 200px;  
+    border: 2px solid black;
+    position: fixed;
 }
 
 .button {
     display: inline-block;
     padding: 5px 5px;
-    font-size: 10px;
+    font-size: 11px;
     cursor: pointer;
     text-align: center;
     text-decoration: none;
@@ -75,7 +93,7 @@
     background-color: #8a91db;
     border: none;
     border-radius:3px;
-    box-shadow: 0 5px #999;
+    /* box-shadow: 0 5px #999; */
     margin: 5px;
   }
 
@@ -86,3 +104,10 @@
   box-shadow: 0 1px #666;
   transform: translateY(4px);
 }
+
+#run{
+    margin-left: 35%;
+    font-size: 15px;
+    font-family: 'IBM Plex Mono' , monospace;
+}
+

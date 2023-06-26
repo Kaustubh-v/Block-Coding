@@ -1,4 +1,4 @@
-import { variables_list  , Runprog} from "./index.js";
+import { variables_list, Runprog } from "./index.js";
 
 export class BaseBlock {
   static instanceCount = 0;
@@ -49,7 +49,7 @@ export class Printstmt extends BaseBlock {
   }
 
   getBlockColor() {
-    return "red";
+    return "#FFC0C0";
   }
 
   getHeaderText() {
@@ -127,7 +127,7 @@ export class Variable extends BaseBlock {
   }
 
   getBlockColor() {
-    return "green";
+    return "#C0FFC0";
   }
 
   getHeaderText() {
@@ -205,7 +205,7 @@ export class Assignment extends BinaryOp {
   }
 
   getBlockColor() {
-    return "blue";
+    return "#C0C0FF";
   }
 
   getHeaderText() {
@@ -243,10 +243,7 @@ export class Assignment extends BinaryOp {
       variables_list[LHS_txt.value] = RHS_txt.value;
       console.log("value is assigned");
       return;
-    }
-
-    else if (valid_variable_name(txtboxid_RHS)) {
-
+    } else if (valid_variable_name(txtboxid_RHS)) {
       if (!is_declared_variable(txtboxid_RHS)) {
         console.log("undefined variable on RHS");
         return;
@@ -254,8 +251,7 @@ export class Assignment extends BinaryOp {
       variables_list[LHS_txt.value] = variables_list[RHS_txt.value];
       console.log("value is assigned");
       return;
-    }
-    else {
+    } else {
       console.log("undefined symbol in RHS");
     }
     return;
@@ -269,7 +265,7 @@ export class Comparison extends BinaryOp {
   }
 
   getBlockColor() {
-    return "orange";
+    return "#FFD8B8";
   }
 
   getHeaderText() {
@@ -320,7 +316,6 @@ export class Comparison extends BinaryOp {
       rhskey = 0;
     // var flag = false;
     for (const key in variables_list) {
-
       if (`${key}` == LHSele.value) {
         lhskey = key;
         console.log("lhs key = " + lhskey);
@@ -334,86 +329,69 @@ export class Comparison extends BinaryOp {
     console.log("operatorno is = " + this.operatorno);
     if (selectedop == "==") {
       return this.equal_equal(lhskey, rhskey, LHSele, RHSele);
-    }
-    else if (selectedop == ">") {
+    } else if (selectedop == ">") {
       return this.greater_than(lhskey, rhskey, LHSele, RHSele);
-    }
-    else if (selectedop == "<") {
+    } else if (selectedop == "<") {
       return this.less_than(lhskey, rhskey, LHSele, RHSele);
-    }
-    else if (selectedop == ">=") {
+    } else if (selectedop == ">=") {
       return this.greater_than_equal_to(lhskey, rhskey, LHSele, RHSele);
-    }
-    else if (selectedop == "<=") {
+    } else if (selectedop == "<=") {
       return this.less_than_equal_to(lhskey, rhskey, LHSele, RHSele);
     }
-
   }
 
   equal_equal(lhskey, rhskey, LHSele, RHSele) {
-
     if (lhskey && rhskey) {
       console.log("compare both variables");
-      if (parseFloat(variables_list[lhskey]) ==
-        parseFloat(variables_list[rhskey])) {
+      if (
+        parseFloat(variables_list[lhskey]) == parseFloat(variables_list[rhskey])
+      ) {
         return true;
       }
       return false;
-    }
-
-    else if (lhskey) {
+    } else if (lhskey) {
       console.log("compare one variable");
       if (parseFloat(variables_list[lhskey]) == parseFloat(RHSele.value)) {
         return true;
       }
       return false;
-    }
-
-    else if (rhskey) {
+    } else if (rhskey) {
       console.log("compare one variable");
       if (parseFloat(variables_list[rhskey]) == parseFloat(LHSele.value)) {
         return true;
       }
       return false;
-    }
-
-    else {
+    } else {
       console.log("compare two non-variables");
       if (parseFloat(LHSele.value) == parseFloat(RHSele.value)) {
         return true;
       }
       return false;
     }
-
   }
 
   greater_than(lhskey, rhskey, LHSele, RHSele) {
     if (lhskey && rhskey) {
       console.log("compare both variables");
-      if (parseFloat(variables_list[lhskey]) >
-        parseFloat(variables_list[rhskey])) {
+      if (
+        parseFloat(variables_list[lhskey]) > parseFloat(variables_list[rhskey])
+      ) {
         return true;
       }
       return false;
-    }
-
-    else if (lhskey) {
+    } else if (lhskey) {
       console.log("compare one variable");
       if (parseFloat(variables_list[lhskey]) > parseFloat(RHSele.value)) {
         return true;
       }
       return false;
-    }
-
-    else if (rhskey) {
+    } else if (rhskey) {
       console.log("compare one variable");
       if (parseFloat(variables_list[rhskey]) < parseFloat(LHSele.value)) {
         return true;
       }
       return false;
-    }
-
-    else {
+    } else {
       console.log("compare two non-variables");
       if (parseFloat(LHSele.value) > parseFloat(RHSele.value)) {
         return true;
@@ -425,30 +403,25 @@ export class Comparison extends BinaryOp {
   less_than(lhskey, rhskey, LHSele, RHSele) {
     if (lhskey && rhskey) {
       console.log("compare both variables");
-      if (parseFloat(variables_list[lhskey]) <
-        parseFloat(variables_list[rhskey])) {
+      if (
+        parseFloat(variables_list[lhskey]) < parseFloat(variables_list[rhskey])
+      ) {
         return true;
       }
       return false;
-    }
-
-    else if (lhskey) {
+    } else if (lhskey) {
       console.log("compare one variable");
       if (parseFloat(variables_list[lhskey]) < parseFloat(RHSele.value)) {
         return true;
       }
       return false;
-    }
-
-    else if (rhskey) {
+    } else if (rhskey) {
       console.log("compare one variable");
       if (parseFloat(variables_list[rhskey]) > parseFloat(LHSele.value)) {
         return true;
       }
       return false;
-    }
-
-    else {
+    } else {
       console.log("compare two non-variables");
       if (parseFloat(LHSele.value) < parseFloat(RHSele.value)) {
         return true;
@@ -460,30 +433,25 @@ export class Comparison extends BinaryOp {
   greater_than_equal_to(lhskey, rhskey, LHSele, RHSele) {
     if (lhskey && rhskey) {
       console.log("compare both variables");
-      if (parseFloat(variables_list[lhskey]) >=
-        parseFloat(variables_list[rhskey])) {
+      if (
+        parseFloat(variables_list[lhskey]) >= parseFloat(variables_list[rhskey])
+      ) {
         return true;
       }
       return false;
-    }
-
-    else if (lhskey) {
+    } else if (lhskey) {
       console.log("compare one variable");
       if (parseFloat(variables_list[lhskey]) >= parseFloat(RHSele.value)) {
         return true;
       }
       return false;
-    }
-
-    else if (rhskey) {
+    } else if (rhskey) {
       console.log("compare one variable");
       if (parseFloat(variables_list[rhskey]) <= parseFloat(LHSele.value)) {
         return true;
       }
       return false;
-    }
-
-    else {
+    } else {
       console.log("compare two non-variables");
       if (parseFloat(LHSele.value) >= parseFloat(RHSele.value)) {
         return true;
@@ -495,30 +463,25 @@ export class Comparison extends BinaryOp {
   less_than_equal_to(lhskey, rhskey, LHSele, RHSele) {
     if (lhskey && rhskey) {
       console.log("compare both variables");
-      if (parseFloat(variables_list[lhskey]) <=
-        parseFloat(variables_list[rhskey])) {
+      if (
+        parseFloat(variables_list[lhskey]) <= parseFloat(variables_list[rhskey])
+      ) {
         return true;
       }
       return false;
-    }
-
-    else if (lhskey) {
+    } else if (lhskey) {
       console.log("compare one variable");
       if (parseFloat(variables_list[lhskey]) <= parseFloat(RHSele.value)) {
         return true;
       }
       return false;
-    }
-
-    else if (rhskey) {
+    } else if (rhskey) {
       console.log("compare one variable");
       if (parseFloat(variables_list[rhskey]) >= parseFloat(LHSele.value)) {
         return true;
       }
       return false;
-    }
-
-    else {
+    } else {
       console.log("compare two non-variables");
       if (parseFloat(LHSele.value) <= parseFloat(RHSele.value)) {
         return true;
@@ -526,8 +489,6 @@ export class Comparison extends BinaryOp {
       return false;
     }
   }
-
-
 }
 
 export class Arithmatic extends BaseBlock {
@@ -538,7 +499,7 @@ export class Arithmatic extends BaseBlock {
   }
 
   getBlockColor() {
-    return "yellow";
+    return "#FFFFC0";
   }
 
   getHeaderText() {
@@ -580,10 +541,8 @@ export class Arithmatic extends BaseBlock {
   create() {
     var newblock = super.create();
 
-
     var rowContainer = document.createElement("div");
     rowContainer.style.display = "inline-block";
-
 
     var input_LHS = document.createElement("input");
     input_LHS.setAttribute("type", "text");
@@ -591,7 +550,6 @@ export class Arithmatic extends BaseBlock {
     input_LHS.id = "txt-box-LHS" + this.name;
     console.log("input id = " + "txt-box-LHS" + this.name);
     input_LHS.setAttribute("placeholder", "Enter VAR");
-
 
     var input_RHS = document.createElement("input");
     input_RHS.setAttribute("type", "text");
@@ -622,23 +580,22 @@ export class Arithmatic extends BaseBlock {
     return newblock;
   }
 
-
   doadd(eqkey, lhskey, rhskey, LHSele, RHSele) {
-
     if (eqkey && lhskey && rhskey) {
       var answer =
-        parseFloat(variables_list[lhskey]) +
-        parseFloat(variables_list[rhskey]);
+        parseFloat(variables_list[lhskey]) + parseFloat(variables_list[rhskey]);
       variables_list[eqkey] = answer.toString();
       console.log("-added using 3 variables");
       return;
     } else if (eqkey && lhskey) {
-      var answer = parseFloat(variables_list[lhskey]) + parseFloat(RHSele.value);
+      var answer =
+        parseFloat(variables_list[lhskey]) + parseFloat(RHSele.value);
       variables_list[eqkey] = answer.toString();
       console.log("added in one variable");
       return;
     } else if (eqkey && rhskey) {
-      var answer = parseFloat(variables_list[rhskey]) + parseFloat(LHSele.value);
+      var answer =
+        parseFloat(variables_list[rhskey]) + parseFloat(LHSele.value);
       variables_list[eqkey] = answer.toString();
       console.log("added in one variable");
       return;
@@ -651,24 +608,24 @@ export class Arithmatic extends BaseBlock {
       console.log("invalid input");
       return;
     }
-
   }
 
   dosub(eqkey, lhskey, rhskey, LHSele, RHSele) {
     if (eqkey && lhskey && rhskey) {
       var answer =
-        parseFloat(variables_list[lhskey]) -
-        parseFloat(variables_list[rhskey]);
+        parseFloat(variables_list[lhskey]) - parseFloat(variables_list[rhskey]);
       variables_list[eqkey] = answer.toString();
       console.log("-added using 3 variables");
       return;
     } else if (eqkey && lhskey) {
-      var answer = parseFloat(variables_list[lhskey]) - parseFloat(RHSele.value);
+      var answer =
+        parseFloat(variables_list[lhskey]) - parseFloat(RHSele.value);
       variables_list[eqkey] = answer.toString();
       console.log("added in one variable");
       return;
     } else if (eqkey && rhskey) {
-      var answer = parseFloat(LHSele.value) - parseFloat(variables_list[rhskey]);
+      var answer =
+        parseFloat(LHSele.value) - parseFloat(variables_list[rhskey]);
       variables_list[eqkey] = answer.toString();
       console.log("added in one variable");
       return;
@@ -681,24 +638,24 @@ export class Arithmatic extends BaseBlock {
       console.log("invalid input");
       return;
     }
-
   }
 
   domul(eqkey, lhskey, rhskey, LHSele, RHSele) {
     if (eqkey && lhskey && rhskey) {
       var answer =
-        parseFloat(variables_list[lhskey]) *
-        parseFloat(variables_list[rhskey]);
+        parseFloat(variables_list[lhskey]) * parseFloat(variables_list[rhskey]);
       variables_list[eqkey] = answer.toString();
       console.log("-added using 3 variables");
       return;
     } else if (eqkey && lhskey) {
-      var answer = parseFloat(variables_list[lhskey]) * parseFloat(RHSele.value);
+      var answer =
+        parseFloat(variables_list[lhskey]) * parseFloat(RHSele.value);
       variables_list[eqkey] = answer.toString();
       console.log("added in one variable");
       return;
     } else if (eqkey && rhskey) {
-      var answer = parseFloat(LHSele.value) * parseFloat(variables_list[rhskey]);
+      var answer =
+        parseFloat(LHSele.value) * parseFloat(variables_list[rhskey]);
       variables_list[eqkey] = answer.toString();
       console.log("added in one variable");
       return;
@@ -711,24 +668,24 @@ export class Arithmatic extends BaseBlock {
       console.log("invalid input");
       return;
     }
-
   }
 
   dodiv(eqkey, lhskey, rhskey, LHSele, RHSele) {
     if (eqkey && lhskey && rhskey) {
       var answer =
-        parseFloat(variables_list[lhskey]) /
-        parseFloat(variables_list[rhskey]);
+        parseFloat(variables_list[lhskey]) / parseFloat(variables_list[rhskey]);
       variables_list[eqkey] = answer.toString();
       console.log("-added using 3 variables");
       return;
     } else if (eqkey && lhskey) {
-      var answer = parseFloat(variables_list[lhskey]) / parseFloat(RHSele.value);
+      var answer =
+        parseFloat(variables_list[lhskey]) / parseFloat(RHSele.value);
       variables_list[eqkey] = answer.toString();
       console.log("added in one variable");
       return;
     } else if (eqkey && rhskey) {
-      var answer = parseFloat(LHSele.value) / parseFloat(variables_list[rhskey]);
+      var answer =
+        parseFloat(LHSele.value) / parseFloat(variables_list[rhskey]);
       variables_list[eqkey] = answer.toString();
       console.log("added in one variable");
       return;
@@ -741,24 +698,24 @@ export class Arithmatic extends BaseBlock {
       console.log("invalid input");
       return;
     }
-
   }
 
   domod(eqkey, lhskey, rhskey, LHSele, RHSele) {
     if (eqkey && lhskey && rhskey) {
       var answer =
-        parseFloat(variables_list[lhskey]) %
-        parseFloat(variables_list[rhskey]);
+        parseFloat(variables_list[lhskey]) % parseFloat(variables_list[rhskey]);
       variables_list[eqkey] = answer.toString();
       console.log("-added using 3 variables");
       return;
     } else if (eqkey && lhskey) {
-      var answer = parseFloat(variables_list[lhskey]) % parseFloat(RHSele.value);
+      var answer =
+        parseFloat(variables_list[lhskey]) % parseFloat(RHSele.value);
       variables_list[eqkey] = answer.toString();
       console.log("added in one variable");
       return;
     } else if (eqkey && rhskey) {
-      var answer = parseFloat(LHSele.value) % parseFloat(variables_list[rhskey]);
+      var answer =
+        parseFloat(LHSele.value) % parseFloat(variables_list[rhskey]);
       variables_list[eqkey] = answer.toString();
       console.log("added in one variable");
       return;
@@ -771,7 +728,6 @@ export class Arithmatic extends BaseBlock {
       console.log("invalid input");
       return;
     }
-
   }
 
   calculate(txtboxeqid, txtboxLHSid, txtboxRHSid) {
@@ -813,25 +769,19 @@ export class Arithmatic extends BaseBlock {
     console.log("operatorno is = " + this.operatorno);
     if (selectedop == "+") {
       this.doadd(eqkey, lhskey, rhskey, LHSele, RHSele);
-    }
-    else if (selectedop == "-") {
+    } else if (selectedop == "-") {
       this.dosub(eqkey, lhskey, rhskey, LHSele, RHSele);
-    }
-    else if (selectedop == "*") {
+    } else if (selectedop == "*") {
       this.domul(eqkey, lhskey, rhskey, LHSele, RHSele);
-    }
-    else if (selectedop == "/") {
+    } else if (selectedop == "/") {
       this.dodiv(eqkey, lhskey, rhskey, LHSele, RHSele);
-    }
-    else if (selectedop == "%") {
+    } else if (selectedop == "%") {
       this.domod(eqkey, lhskey, rhskey, LHSele, RHSele);
     }
-
   }
-
 }
 
-export class IFstatement extends BaseBlock{
+export class IFstatement extends BaseBlock {
   constructor() {
     super();
     console.log("IF block initiated");
@@ -845,7 +795,7 @@ export class IFstatement extends BaseBlock{
     return "IF";
   }
 
-  create(){
+  create() {
     var newblock = super.create();
     var logicarea = document.createElement("div");
     logicarea.id = "Logic" + this.name;
@@ -864,28 +814,27 @@ export class IFstatement extends BaseBlock{
     newblock.appendChild(logicarea);
     newblock.appendChild(addarea);
 
-
     return newblock;
   }
 
-  getComparisionid(Logicid){
+  getComparisionid(Logicid) {
     let Value = document.getElementById(Logicid);
     let ele = Value.children;
-    console.log("comparision block id is : " + ele[0].id)
+    console.log("comparision block id is : " + ele[0].id);
     return ele[0].id;
   }
 
-  Runcanvas(Canvasid){
+  Runcanvas(Canvasid) {
     let Value = document.getElementById(Canvasid);
     let orederofelmnts = Value.children;
-    console.log("orderofelmnts in canvasBlock = "+ orederofelmnts[0].id);
+    console.log("orderofelmnts in canvasBlock = " + orederofelmnts[0].id);
     orederofelmnts = Array.from(orederofelmnts);
     Runprog(Canvasid, orederofelmnts);
     return;
   }
 }
 
-export class ELSEstatement extends BaseBlock{
+export class ELSEstatement extends BaseBlock {
   constructor() {
     super();
     console.log("ELSE block initiated");
@@ -899,7 +848,7 @@ export class ELSEstatement extends BaseBlock{
     return "ELSE";
   }
 
-  create(){
+  create() {
     var newblock = super.create();
     var addarea = document.createElement("div");
     addarea.id = "Canvas" + this.name;
@@ -911,10 +860,10 @@ export class ELSEstatement extends BaseBlock{
     newblock.appendChild(addarea);
     return newblock;
   }
-  Runcanvas(Canvasid){
+  Runcanvas(Canvasid) {
     let Value = document.getElementById(Canvasid);
     let orederofelmnts = Value.children;
-    console.log("orderofelmnts in canvasBlock = "+ orederofelmnts[0].id);
+    console.log("orderofelmnts in canvasBlock = " + orederofelmnts[0].id);
     orederofelmnts = Array.from(orederofelmnts);
     Runprog(Canvasid, orederofelmnts);
     return;

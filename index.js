@@ -227,7 +227,7 @@ export function Runprog(Canvasid) {
       ) {
         IFflag = 1;
         i+=1
-        ele.Runcanvas("Canvasblock" + number);
+        ele.Runcanvas("Canvasblock" + number);  
       } else if(IFflag == 0) {
         let elseElement = orderofexec[i+1];
         i+=1;
