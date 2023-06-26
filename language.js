@@ -1112,7 +1112,7 @@ export class FORloop extends BaseBlock{
 
     let incrementval = incrementTxtbox.value;
     let startval = startTxtbox.value;
-    startval = parseInt(startval);
+    
     let endval = endTxtbox.value;
     console.log("endval = " + endval);
     let stepval = stepTxtbox.value;
@@ -1129,6 +1129,10 @@ export class FORloop extends BaseBlock{
     }
     if(!startval){
       startval = 0;
+    }else if(startval in variables_list){
+      startval = variables_list[startval];
+    }else{
+      startval = parseInt(startval);
     }
     if(!incrementval){
       incrementval = "i"
@@ -1139,6 +1143,10 @@ export class FORloop extends BaseBlock{
     
     if(!stepval){
       stepval = 1;
+    }else if(stepval in variables_list){
+      stepval = variables_list[stepval];
+    }else{
+      startval = parseInt(startval);
     }
 
       let Value = document.getElementById(canvasid);
