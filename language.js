@@ -1,4 +1,4 @@
-import { variables_list  , Runprog} from "./index.js";
+import { variables_list, Runprog } from "./index.js";
 
 export class BaseBlock {
   static instanceCount = 0;
@@ -530,6 +530,102 @@ export class Comparison extends BinaryOp {
 
 }
 
+export class LogicalOperator extends BaseBlock {
+  constructor() {
+    super();
+    console.log("logical operator block initiated");
+  }
+
+  create() {
+    var newBlock = super.create();
+
+    var rowContainer = document.createElement("div");
+    rowContainer.style.display = "inline-block";
+
+    var lhsSlot = document.createElement("div");
+    lhsSlot.classList.add("Slot");
+    lhsSlot.id = "slot-LHS" + this.name;
+    lhsSlot.textContent = "Drag Comparison Block Here";
+    lhsSlot.addEventListener("drop", drop);
+    lhsSlot.addEventListener("dragover", allowDrop);
+
+    var symbolElement = this.getSymbolElement();
+
+    var rhsSlot = document.createElement("div");
+    rhsSlot.classList.add("Slot");
+    rhsSlot.id = "slot-RHS" + this.name;
+    rhsSlot.textContent = "Drag Comparison Block Here";
+    rhsSlot.addEventListener("drop", drop);
+    rhsSlot.addEventListener("dragover", allowDrop);
+
+    rowContainer.appendChild(lhsSlot);
+    rowContainer.appendChild(symbolElement);
+    rowContainer.appendChild(rhsSlot);
+
+    newBlock.appendChild(rowContainer);
+
+    return newBlock;
+  }
+
+  getSymbolElement() {
+    const dropdown = document.createElement("select");
+    dropdown.id = "dropdown" + this.name;
+
+    const option1 = document.createElement("option");
+    option1.value = "&&";
+    option1.text = "&&";
+    dropdown.appendChild(option1);
+
+    const option2 = document.createElement("option");
+    option2.value = "||";
+    option2.text = "||";
+    dropdown.appendChild(option2);
+
+    return dropdown;
+  }
+
+  getComparisionid_left(logical_name){
+    const logicalBlock = document.getElementById(logical_name);
+
+    const leftSlot = document.getElementById("slot-LHS" + logical_name);
+
+    const leftComparisonBlock = leftSlot.children[0];
+  
+    console.log("Left Comparison Block ID: " + leftComparisonBlock.id);
+    return leftComparisonBlock.id;
+  }
+
+  getComparisionid_right(logical_name){
+    const logicalBlock = document.getElementById(logical_name);
+
+
+    const rightSlot = document.getElementById("slot-RHS" + logical_name);
+
+    const rightComparisonBlock = rightSlot.children[0];
+
+    console.log("Right Comparison Block ID: " + rightComparisonBlock.id);
+    return rightComparisonBlock.id;
+  }
+
+  performLogicalOperation(logical_name, lhsResult, rhsResult) {
+
+    const operator = document.getElementById("dropdown" + logical_name).value;
+  
+    console.log("LHS Result: " + lhsResult);
+    console.log("RHS Result: " + rhsResult);
+  
+
+    if (operator === "&&") {
+      return lhsResult && rhsResult;
+    } else if (operator === "||") {
+      return lhsResult || rhsResult;
+    } else {
+      throw new Error("Invalid operator: " + operator);
+    }
+  }
+
+}
+
 export class Arithmatic extends BaseBlock {
   static operatorno = 0;
   constructor() {
@@ -831,7 +927,7 @@ export class Arithmatic extends BaseBlock {
 
 }
 
-export class IFstatement extends BaseBlock{
+export class IFstatement extends BaseBlock {
   constructor() {
     super();
     console.log("IF block initiated");
@@ -845,7 +941,7 @@ export class IFstatement extends BaseBlock{
     return "IF";
   }
 
-  create(){
+  create() {
     var newblock = super.create();
     var logicarea = document.createElement("div");
     logicarea.id = "Logic" + this.name;
@@ -868,24 +964,24 @@ export class IFstatement extends BaseBlock{
     return newblock;
   }
 
-  getComparisionid(Logicid){
+  getComparisionid(Logicid) {
     let Value = document.getElementById(Logicid);
     let ele = Value.children;
     console.log("comparision block id is : " + ele[0].id)
     return ele[0].id;
   }
 
-  Runcanvas(Canvasid){
+  Runcanvas(Canvasid) {
     let Value = document.getElementById(Canvasid);
     let orederofelmnts = Value.children;
-    console.log("orderofelmnts in canvasBlock = "+ orederofelmnts[0].id);
+    console.log("orderofelmnts in canvasBlock = " + orederofelmnts[0].id);
     orederofelmnts = Array.from(orederofelmnts);
     Runprog(Canvasid, orederofelmnts);
     return;
   }
 }
 
-export class ELSEstatement extends BaseBlock{
+export class ELSEstatement extends BaseBlock {
   constructor() {
     super();
     console.log("ELSE block initiated");
@@ -899,7 +995,7 @@ export class ELSEstatement extends BaseBlock{
     return "ELSE";
   }
 
-  create(){
+  create() {
     var newblock = super.create();
     var addarea = document.createElement("div");
     addarea.id = "Canvas" + this.name;
@@ -911,10 +1007,10 @@ export class ELSEstatement extends BaseBlock{
     newblock.appendChild(addarea);
     return newblock;
   }
-  Runcanvas(Canvasid){
+  Runcanvas(Canvasid) {
     let Value = document.getElementById(Canvasid);
     let orederofelmnts = Value.children;
-    console.log("orderofelmnts in canvasBlock = "+ orederofelmnts[0].id);
+    console.log("orderofelmnts in canvasBlock = " + orederofelmnts[0].id);
     orederofelmnts = Array.from(orederofelmnts);
     Runprog(Canvasid, orederofelmnts);
     return;
