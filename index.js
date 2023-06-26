@@ -5,6 +5,7 @@ import {
   valid_variable_name,
   Arithmatic,
   Comparison,
+  LogicalOperator,
   IFstatement,
   ELSEstatement,
   FORloop,
@@ -63,7 +64,10 @@ myButton8.addEventListener("click", function () {
   //calling CreateBlock function for For loop
   CreateBlock("forblock");
 });
-
+const myButton9 = document.getElementById("logical");
+myButton9.addEventListener("click", function(){
+  CreateBlock("logicalblock");
+});
 //this function reorders the element array according to the order in which they are placed in the canvas
 //this function is called everytime you click run
 //elmntarr is the array with the instances of all created blocks in the order of their creation
@@ -157,6 +161,14 @@ function CreateBlock(block_type) {
     parent.appendChild(newblock);
     orderofelmnts.push(forblck);
   }
+  else if(block_type == "logicalblock"){
+    var logicalblck = new LogicalOperator();
+    var newblock = logicalblck.create();
+    var parent = document.getElementById("Menu");
+    parent.appendChild(newblock);
+    orderofelmnts.push(logicalblck);
+
+  }
 
   // var parent = document.getElementById("Menu");
   // parent.appendChild(newblock);
@@ -249,8 +261,31 @@ export function Runprog(Canvasid) {
       ) {
         console.log("comparison result : false");
       }
-    } else if (ele.name && ele instanceof IFstatement) {
-      //running the block if it as instance of IFstatement class
+    } 
+    else if(ele instanceof LogicalOperator){
+
+      const left_id = ele.getComparisionid_left(ele.name);
+      const right_id = ele.getComparisionid_right(ele.name);
+      let comparisionelmnt_left;
+      let comparisionelmnt_right;
+
+      for(let i = 0 ; i < orderofelmnts.length ; i++){
+        if(orderofelmnts[i].name == left_id){
+          comparisionelmnt_left = orderofelmnts[i];
+        }
+        if(orderofelmnts[i].name == right_id){
+          comparisionelmnt_right = orderofelmnts[i];
+        }
+      }
+      let lhsResult = comparisionelmnt_left.compare("txt-box-LHS" + comparisionelmnt_left.name,
+      "txt-box-RHS" + comparisionelmnt_left.name)
+
+      let rhsResult = comparisionelmnt_right.compare("txt-box-LHS" + comparisionelmnt_right.name,
+      "txt-box-RHS" + comparisionelmnt_right.name)
+      ele.performLogicalOperation(ele.name, lhsResult, rhsResult);
+
+    } 
+    else if (ele.name && ele instanceof IFstatement) {
       console.log("----------running if----------");
       let number = ele.name[ele.name.length - 1];
       let IFflag = 0;
@@ -261,20 +296,41 @@ export function Runprog(Canvasid) {
           comparisionelmnt = orderofelmnts[i];
         }
       }
-      if (
-        comparisionelmnt.compare(
-          "txt-box-LHS" + comparisionelmnt.name,
-          "txt-box-RHS" + comparisionelmnt.name
-        )
-      ) {
-        IFflag = 1;
-        i += 1;
+      if(comparisionelmnt instanceof LogicalOperator){
+        const left_id = comparisionelmnt.getComparisionid_left(comparisionelmnt.name);
+        const right_id = comparisionelmnt.getComparisionid_right(comparisionelmnt.name);
+        let comparisionelmnt_left;
+        let comparisionelmnt_right;
+  
+        for(let j = 0 ; j < orderofelmnts.length ; j++){
+          if(orderofelmnts[j].name == left_id){
+            comparisionelmnt_left = orderofelmnts[j];
+          }
+          if(orderofelmnts[j].name == right_id){
+            comparisionelmnt_right = orderofelmnts[j];
+          }
+        }
+        let lhsResult = comparisionelmnt_left.compare("txt-box-LHS" + comparisionelmnt_left.name,
+        "txt-box-RHS" + comparisionelmnt_left.name)
+  
+        let rhsResult = comparisionelmnt_right.compare("txt-box-LHS" + comparisionelmnt_right.name,
+        "txt-box-RHS" + comparisionelmnt_right.name)
+        IFflag = comparisionelmnt.performLogicalOperation(comparisionelmnt.name, lhsResult, rhsResult);
+
+      }
+      if(comparisionelmnt instanceof Comparison){
+        IFflag = comparisionelmnt.compare("txt-box-LHS" + comparisionelmnt.name,"txt-box-RHS" + comparisionelmnt.name);
+
+      } 
+
+      if(IFflag == true){
         ele.Runcanvas("ifCanvasblock" + number);
-      } else if (IFflag == 0) {
-        //running the ELSE block if the logic is False
-        let elseElement = orderofexec[i + 1];
         i += 1;
-        number = elseElement.name[elseElement.name.length - 1];
+      }
+      else if(IFflag == false) {
+        let elseElement = orderofexec[i+1];
+        i+=1;
+        number = elseElement.name[elseElement.name.length -1];
         elseElement.Runcanvas("elseCanvasblock" + number);
         console.log("condition is flase!!");
       }
