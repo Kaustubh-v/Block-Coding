@@ -41,6 +41,7 @@ h2{
     display:block;
     align-items:center;
     width: 740px;
+    border: 1px solid black;
 }
 
 .Block:hover{
@@ -63,17 +64,19 @@ h2{
 
 
 #terminalcolumn{
-    text-align: center;
+    padding-left: 100px;
+    text-align: left;
     width: 30%;
     height: 500px;
     position: fixed;
     z-index: 100;
     margin-left: 62%;
+    font-family: 'IBM Plex Mono' , monospace;
 }
 
 #Delete{
     height : 100px;
-    width : 469px;
+    width : 560px;
     margin : 520px 10.3% 10px 61.7%; 
     z-index: 100;
     margin-bottom: 200px;  

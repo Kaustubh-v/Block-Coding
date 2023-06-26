@@ -105,18 +105,29 @@ export class Printstmt extends BaseBlock {
       }
     }
 
-    console.log("value of variable is : " + variableName);
+    console.log("value of variable is : " + variableValue);
+    let textboxValue = txtbox.value;
     var txt = "";
     if (!variableValue) {
-      txt = document.createTextNode(txtbox.value + "\n");
+      // txt = document.createTextNode(txtbox.value);
+      if(textboxValue[textboxValue.length-1] == "t" && textboxValue[textboxValue.length-2] == '\\'){
+        txt = document.createTextNode(textboxValue.slice(0,textboxValue.length-2) + " ");
+      }else{
+        txt = document.createTextNode(textboxValue + "\n");
+      }
     } else {
-      txt = document.createTextNode(txtbox.value + variableValue + "\n");
+      // txt = document.createTextNode(txtbox.value + variableValue + "\n");
+      if(textboxValue[textboxValue.length-1] == "t" && textboxValue[textboxValue.length-2] == '\\'){
+        txt = document.createTextNode(textboxValue.slice(0,textboxValue.length-2) + variableValue + " ");
+      }else{
+        txt = document.createTextNode(textboxValue + variableValue + "\n");
+      }
     }
-
     // console.log("print = "+ txt);
     var terminal = document.getElementById("Terminal");
     terminal.appendChild(txt);
     terminal.innerHTML = terminal.innerHTML.replace("\n", "<br>");
+    // terminal.innerHTML = terminal.innerHTML.replace("\t", " ")
   }
 }
 
@@ -805,7 +816,7 @@ export class IFstatement extends BaseBlock {
     logicarea.style.margin = "5px";
     logicarea.style.padding = "10px";
     var addarea = document.createElement("div");
-    addarea.id = "Canvas" + this.name;
+    addarea.id = "ifCanvas" + this.name;
     addarea.style.backgroundColor = this.getBlockColor();
     addarea.style.border = "solid";
     addarea.style.borderWidth = "3px";
@@ -851,7 +862,7 @@ export class ELSEstatement extends BaseBlock {
   create() {
     var newblock = super.create();
     var addarea = document.createElement("div");
-    addarea.id = "Canvas" + this.name;
+    addarea.id = "elseCanvas" + this.name;
     addarea.style.backgroundColor = this.getBlockColor();
     addarea.style.border = "solid";
     addarea.style.borderWidth = "3px";
@@ -868,6 +879,166 @@ export class ELSEstatement extends BaseBlock {
     Runprog(Canvasid, orederofelmnts);
     return;
   }
+}
+
+export class FORloop extends BaseBlock{
+  
+  constructor() {
+    super();
+    console.log("FOR block initiated");
+  }
+
+  getBlockColor() {
+    return "silver";
+  }
+
+  getHeaderText() {
+    return "FOR";
+  }
+
+  create() {
+    var newblock = super.create();
+
+    var defineblock = document.createElement("div");
+    defineblock.id = "loopdefinitions" + this.name;
+    defineblock.style.height = "20px"
+    defineblock.style.display = "flex";
+    defineblock.style.alignItems = "row";
+    defineblock.style.justifyContent = "center";
+    defineblock.style.alignContent = "center";
+
+    let fortxt = document.createElement("h4");
+    fortxt.textContent = "FOR";
+    fortxt.style.marginTop = "0";
+    fortxt.style.marginBottom = "0";
+    fortxt.style.marginLeft = "10px";
+    fortxt.style.marginRight = "10px";
+    defineblock.appendChild(fortxt);
+
+    var input_increment = document.createElement("input");
+    input_increment.setAttribute("type", "text");
+    input_increment.style.height = "10px";
+    input_increment.style.width = "20px";
+    input_increment.id = "incremnent-box" + this.name;
+    console.log("input id = " + "increment-box" + this.name);
+    input_increment.setAttribute("placeholder", "i");
+    defineblock.appendChild(input_increment);
+
+    let fromtxt = document.createElement("h4");
+    fromtxt.textContent = "FROM";
+    fromtxt.style.marginTop = "0";
+    fromtxt.style.marginBottom = "0";
+    fromtxt.style.marginLeft = "10px";
+    fromtxt.style.marginRight = "10px";
+    defineblock.appendChild(fromtxt);
+
+    var input_start = document.createElement("input");
+    input_start.setAttribute("type", "text");
+    input_start.style.height = "10px";
+    input_start.style.width = "20px";
+    input_start.id = "start-box" + this.name;
+    console.log("input id = " + "start-box" + this.name);
+    input_start.setAttribute("placeholder", "0");
+    defineblock.appendChild(input_start);
+
+    let totxt = document.createElement("h4");
+    totxt.style.marginTop = "0";
+    totxt.style.marginBottom = "0";
+    totxt.style.marginLeft = "10px";
+    totxt.style.marginRight = "10px";
+    totxt.textContent = "END";
+    defineblock.appendChild(totxt);
+
+    var input_end = document.createElement("input");
+    input_end.setAttribute("type", "text");
+    input_end.style.height = "10px";
+    input_end.style.width = "20px";
+    input_end.id = "end-box" + this.name;
+    console.log("input id = " + "end-box" + this.name);
+    input_end.setAttribute("placeholder", "0");
+    defineblock.appendChild(input_end);
+
+    let steptxt = document.createElement("h4");
+    steptxt.style.marginTop = "0";
+    steptxt.style.marginBottom = "0";
+    steptxt.style.marginLeft = "10px";
+    steptxt.style.marginRight = "10px";
+    steptxt.textContent = "STEP";
+    defineblock.appendChild(steptxt);
+
+    var input_step = document.createElement("input");
+    input_step.setAttribute("type", "text");
+    input_step.style.height = "10px";
+    input_step.style.width = "20px";
+    input_step.id = "step-box" + this.name;
+    console.log("input id = " + "step-box" + this.name);
+    input_step.setAttribute("placeholder", "1");
+    defineblock.appendChild(input_step);
+    
+    newblock.appendChild(defineblock);
+
+    var addarea = document.createElement("div");
+    addarea.id = "forCanvas" + this.name;
+    addarea.style.backgroundColor = this.getBlockColor();
+    addarea.style.border = "solid";
+    addarea.style.borderWidth = "3px";
+    addarea.style.margin = "5px";
+    addarea.style.padding = "25px";
+    newblock.appendChild(addarea);
+    
+    return newblock;
+  }
+
+  Runcanvas(Forid , canvasid){
+    const loopdef = document.getElementById("loopdefinitions" + Forid);
+    let childlist  = loopdef.children;
+    const incrementTxtbox = childlist[1];
+    const startTxtbox = childlist[3];
+    const endTxtbox = childlist[5]
+    const stepTxtbox = childlist[7];
+
+    let incrementval = incrementTxtbox.value;
+    let startval = startTxtbox.value;
+    startval = parseInt(startval);
+    let endval = endTxtbox.value;
+    console.log("endval = " + endval);
+    let stepval = stepTxtbox.value;
+    stepval = parseInt(stepval);
+
+    if(endval in variables_list){
+      endval = variables_list[endval];
+      console.log("=====end val = " + endval);
+    }else{
+      if(!endval){
+        alert("please enter TO value");
+      }
+      endval = parseInt(endval);
+    }
+    if(!startval){
+      startval = 0;
+    }
+    if(!incrementval){
+      incrementval = "i"
+      variables_list["i"] = startval;
+    }else{
+      variables_list[incrementval] = startval;
+    }
+    
+    if(!stepval){
+      stepval = 1;
+    }
+
+      let Value = document.getElementById(canvasid);
+        let orederofelmnts = Value.children;
+        console.log("orderofelmnts in canvasBlock = " + orederofelmnts[0].id);
+        orederofelmnts = Array.from(orederofelmnts);
+      for(let k = startval ; k < endval ; k+=stepval){
+        variables_list[incrementval] =k;
+        Runprog(canvasid, orederofelmnts);
+      }
+    }
+
+  
 }
 
 export function valid_variable_name(txtboxid) {

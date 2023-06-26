@@ -1,10 +1,9 @@
 
-
 function allowDrop(ev) {
     ev.preventDefault();
   }
   
-  function drag(ev) {
+function drag(ev) {
     console.log(ev.target.id);
     ev.dataTransfer.setData("text", ev.target.id);
   }
@@ -30,7 +29,7 @@ function allowDrop(ev) {
     else if(data && droppedonelementid.includes("block")){
       droppedonelement.insertAdjacentElement('beforeend' , draggedelement);
     }
-    else if(droppedonelementid == "Delete"){
+    else if(droppedonelementid == "Delete"){    //deleting the block if it is dropped on the delete area
       // var draggedelement_txtbox = document.getElementById("vartxt-box"+) ; 
       console.log("deleted element = " + draggedelement.id);
       draggedelement.remove();

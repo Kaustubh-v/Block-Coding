@@ -6,7 +6,8 @@ import {
   Arithmatic,
   Comparison,
   IFstatement,
-  ELSEstatement
+  ELSEstatement,
+  FORloop,
 } from "./language.js";
 
 var orderofelmnts = []; // contains the instance of each block created
@@ -14,42 +15,59 @@ export let variables_list = new Object();
 
 const myButton = document.getElementById("run");
 myButton.addEventListener("click", function () {
+  //calling Runprog function
   Runprog("Canvas", orderofelmnts);
 });
 
 const myButton1 = document.getElementById("print");
 myButton1.addEventListener("click", function () {
+  //calling CreateBlock function for print block
   CreateBlock("printblock");
 });
 
 const myButton2 = document.getElementById("variable");
 myButton2.addEventListener("click", function () {
+  //calling CreateBlock function for variable block
   CreateBlock("varblock");
 });
 
 const myButton3 = document.getElementById("assign");
 myButton3.addEventListener("click", function () {
+  //calling CreateBlock function for assign block
   CreateBlock("assignblock");
 });
 
 const myButton4 = document.getElementById("arithmatic");
 myButton4.addEventListener("click", function () {
+  //calling CreateBlock function for aithmatic block
   CreateBlock("arithmaticblock");
 });
 const myButton5 = document.getElementById("compare");
 myButton5.addEventListener("click", function () {
+  //calling CreateBlock function for comparision block
   CreateBlock("compareblock");
 });
 
 const myButton6 = document.getElementById("ifstatement");
 myButton6.addEventListener("click", function () {
+  //calling CreateBlock function for if block
   CreateBlock("ifblock");
 });
 const myButton7 = document.getElementById("elsestatement");
 myButton7.addEventListener("click", function () {
+  //calling CreateBlock function for else block
   CreateBlock("elseblock");
 });
+const myButton8 = document.getElementById("forloop");
+myButton8.addEventListener("click", function () {
+  //calling CreateBlock function for For loop
+  CreateBlock("forblock");
+});
 
+//this function reorders the element array according to the order in which they are placed in the canvas
+//this function is called everytime you click run
+//elmntarr is the array with the instances of all created blocks in the order of their creation
+//orderofexec is the array with the ids of all the elements in canvas according to the order of placement
 function reorder(elmntarr, orderofexec) {
   let delflag = 0;
   let enterflag = 0;
@@ -83,6 +101,10 @@ function reorder(elmntarr, orderofexec) {
   return elmntarr;
 }
 
+//this function creates blocks according to the block type that has been given to it as argument
+//to create block it uses the create function of respective class
+//each new instance created is pushed in the orderofelmnts array
+//this function is called everytime a block button is pressed
 function CreateBlock(block_type) {
   console.log("init" + block_type + " here");
   if (block_type == "printblock") {
@@ -122,18 +144,26 @@ function CreateBlock(block_type) {
     var parent = document.getElementById("Menu");
     parent.appendChild(newblock);
     orderofelmnts.push(ifblck);
-  }else if (block_type == "elseblock") {
+  } else if (block_type == "elseblock") {
     var elseblck = new ELSEstatement();
     var newblock = elseblck.create();
     var parent = document.getElementById("Menu");
     parent.appendChild(newblock);
     orderofelmnts.push(elseblck);
+  }else if (block_type == "forblock") {
+    var forblck = new FORloop();
+    var newblock = forblck.create();
+    var parent = document.getElementById("Menu");
+    parent.appendChild(newblock);
+    orderofelmnts.push(forblck);
   }
 
   // var parent = document.getElementById("Menu");
   // parent.appendChild(newblock);
 }
 
+// this function makes a new array which has all the elements's ids that are placed inside the canvas in order
+//the canvas id is taken as argument
 function getElementsinOrder(Canvasid) {
   const parentElement = document.getElementById(Canvasid); // Replace 'parent' with the ID of the parent element
   let elmntarr = new Array();
@@ -153,25 +183,33 @@ function getElementsinOrder(Canvasid) {
   return elmntarr;
 }
 
+//this function is used to run the code.
+//the blocks are run according to their respective class functions.
 export function Runprog(Canvasid) {
+  if(!Canvasid.includes("for") && !Canvasid.includes("if") && !Canvasid.includes("else")){
   console.log("runnig canvas : " + Canvasid);
   console.log("runnig canvas children : " + orderofelmnts[0].id);
   const terminal = document.getElementById("Terminal");
   terminal.textContent = "";
   variables_list = {};
+}
   let orderofplacement = getElementsinOrder(Canvasid); // these contain the id of the elements
   console.log("length of orderofplacement = " + orderofplacement.length);
   let elmntarr = orderofelmnts.concat();
+  //getting all the instances in correct order
   let orderofexec = reorder(elmntarr, orderofplacement);
   console.log("length of orderofexec = " + orderofexec.length);
+  //going through each element and running it
   for (let i = 0; i < orderofexec.length; i++) {
     const ele = orderofexec[i];
     console.log("running = " + ele.name);
 
     if (ele.name && ele instanceof Printstmt) {
+      //running the block if it as instance of Printstmt class
       console.log("print block is being executed");
       ele.display("txt-box" + ele.name, variables_list);
     } else if (ele.name && ele instanceof Variable) {
+      //running the block if it as instance of Variable class
       if (valid_variable_name("vartxt-box" + ele.name)) {
         const var_txtbox = document.getElementById("vartxt-box" + ele.name);
         let unique_flag = true;
@@ -189,8 +227,10 @@ export function Runprog(Canvasid) {
         }
       }
     } else if (ele.name && ele instanceof Assignment) {
+      //running the block if it as instance of Assignment class
       ele.assign("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name);
     } else if (ele instanceof Arithmatic) {
+      //running the block if it as instance of Arithmatic class
       console.log("----reached here------" + ele.name);
       ele.calculate(
         "txt-box-LHS" + ele.name,
@@ -198,6 +238,7 @@ export function Runprog(Canvasid) {
         "txt-box-add" + ele.name
       );
     } else if (ele instanceof Comparison) {
+      //running the block if it as instance of Comparision class
       console.log("comparision ele is : " + ele.name);
       if (
         ele.compare("txt-box-LHS" + ele.name, "txt-box-RHS" + ele.name) == true
@@ -209,13 +250,14 @@ export function Runprog(Canvasid) {
         console.log("comparison result : false");
       }
     } else if (ele.name && ele instanceof IFstatement) {
+      //running the block if it as instance of IFstatement class
       console.log("----------running if----------");
       let number = ele.name[ele.name.length - 1];
       let IFflag = 0;
       let Comparisionid = ele.getComparisionid("Logicblock" + number);
       let comparisionelmnt;
-      for(let i = 0 ; i < orderofelmnts.length ; i++){
-        if(orderofelmnts[i].name == Comparisionid){
+      for (let i = 0; i < orderofelmnts.length; i++) {
+        if (orderofelmnts[i].name == Comparisionid) {
           comparisionelmnt = orderofelmnts[i];
         }
       }
@@ -226,27 +268,37 @@ export function Runprog(Canvasid) {
         )
       ) {
         IFflag = 1;
-        i+=1
-        ele.Runcanvas("Canvasblock" + number);  
-      } else if(IFflag == 0) {
-        let elseElement = orderofexec[i+1];
-        i+=1;
-        number = elseElement.name[elseElement.name.length -1];
-        elseElement.Runcanvas("Canvasblock" + number);
+        i += 1;
+        ele.Runcanvas("ifCanvasblock" + number);
+      } else if (IFflag == 0) {
+        //running the ELSE block if the logic is False
+        let elseElement = orderofexec[i + 1];
+        i += 1;
+        number = elseElement.name[elseElement.name.length - 1];
+        elseElement.Runcanvas("elseCanvasblock" + number);
         console.log("condition is flase!!");
       }
+    }else if (ele.name && ele instanceof FORloop){
+      //running the block if it is instance of Forloop class
+      console.log(" ----- running for -----");
+      let forid = ele.name;
+      let canvasid = "forCanvas" + ele.name;
+      console.log("for id  : "+ forid + " canvas id : " + canvasid);
+      ele.Runcanvas(forid , canvasid);
     }
 
     console.log("printing variable list for verification");
     for (const key in variables_list) {
       console.log(`Key: ${key}, Value: ${variables_list[key]}`);
     }
-
-    // prln.display();
   }
+
+  //after the execution of the code all the variables are deleted
+  if(!Canvasid.includes("for")){
   for (var prop in variables_list) {
     if (variables_list.hasOwnProperty(prop)) {
       delete variables_list[prop];
     }
   }
+}
 }
