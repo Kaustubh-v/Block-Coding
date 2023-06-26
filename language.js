@@ -918,7 +918,15 @@ export class IFstatement extends BaseBlock {
     addarea.style.borderWidth = "3px";
     addarea.style.margin = "5px";
     addarea.style.padding = "25px";
+
+    let dotxt = document.createElement("h4");
+    dotxt.textContent = "DO";
+    dotxt.style.marginTop = "0";
+    dotxt.style.marginBottom = "0";
+    dotxt.style.marginLeft = "2px";
+    dotxt.style.marginRight = "2px";
     newblock.appendChild(logicarea);
+    newblock.appendChild(dotxt);
     newblock.appendChild(addarea);
 
     return newblock;
@@ -964,6 +972,15 @@ export class ELSEstatement extends BaseBlock {
     addarea.style.borderWidth = "3px";
     addarea.style.margin = "5px";
     addarea.style.padding = "25px";
+
+    let dotxt = document.createElement("h4");
+    dotxt.textContent = "DO";
+    dotxt.style.marginTop = "0";
+    dotxt.style.marginBottom = "0";
+    dotxt.style.marginLeft = "2px";
+    dotxt.style.marginRight = "2px";
+    newblock.appendChild(dotxt);
+
     newblock.appendChild(addarea);
     return newblock;
   }

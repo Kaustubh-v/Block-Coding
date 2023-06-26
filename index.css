@@ -11,6 +11,7 @@
 h2{
     font-family: 'IBM Plex Mono' , monospace;
     color: #41833d;
+    margin-left: 30%;
 }
 .row{
     display : flex;
@@ -55,7 +56,7 @@ h2{
 }
 
 .Text-Box{
-    width : 200px;
+    width : 30%;
 }
 
 .RunButton{
